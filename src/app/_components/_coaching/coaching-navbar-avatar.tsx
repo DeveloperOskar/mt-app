@@ -1,11 +1,21 @@
+"use client";
+
 import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
-const CoachingNavbarAvatar = () => {
+const CoachingNavbarAvatar = ({
+  image,
+  name,
+}: {
+  image: string;
+  name: string;
+}) => {
   return (
     <Avatar>
-      <AvatarImage src="lfsdjfskl" />
-      <AvatarFallback className="bg-black text-white">CN</AvatarFallback>
+      <AvatarImage src={image} />
+      <AvatarFallback className="bg-black font-semibold text-white">
+        {name}
+      </AvatarFallback>
     </Avatar>
   );
 };

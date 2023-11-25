@@ -2,8 +2,12 @@ import React from "react";
 import Image from "next/image";
 import { CoachingNavLink } from "./coaching-navbar-link";
 import CoachingNavbarAvatar from "./coaching-navbar-avatar";
+import { api } from "~/trpc/server";
+import { getInitials } from "~/app/_lib/utils";
 
 const CoachingNavbar = async () => {
+  const account = await api.account.get.query();
+
   return (
     <nav className="flex items-center justify-between gap-6  bg-white px-3 py-3">
       <div className="flex items-center gap-5">
@@ -31,7 +35,10 @@ const CoachingNavbar = async () => {
         </ul>
       </div>
 
-      <CoachingNavbarAvatar />
+      <CoachingNavbarAvatar
+        image={account?.image ?? ""}
+        name={getInitials(account?.name ?? "")}
+      />
     </nav>
   );
 };

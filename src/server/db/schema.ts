@@ -1,6 +1,5 @@
 import { relations, sql } from "drizzle-orm";
 import {
-  bigint,
   index,
   int,
   mysqlTableCreator,
@@ -8,8 +7,11 @@ import {
   text,
   timestamp,
   varchar,
+  boolean,
+  serial,
 } from "drizzle-orm/mysql-core";
 import { type AdapterAccount } from "next-auth/adapters";
+import { FoodUnits } from "~/types/_coaching/data/foods/system-foods";
 
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
@@ -18,23 +20,6 @@ import { type AdapterAccount } from "next-auth/adapters";
  * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
  */
 export const mysqlTable = mysqlTableCreator((name) => `mt-app_${name}`);
-
-export const posts = mysqlTable(
-  "post",
-  {
-    id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
-    name: varchar("name", { length: 256 }),
-    createdById: varchar("createdById", { length: 255 }).notNull(),
-    createdAt: timestamp("created_at")
-      .default(sql`CURRENT_TIMESTAMP`)
-      .notNull(),
-    updatedAt: timestamp("updatedAt").onUpdateNow(),
-  },
-  (example) => ({
-    createdByIdIdx: index("createdById_idx").on(example.createdById),
-    nameIndex: index("name_idx").on(example.name),
-  }),
-);
 
 export const users = mysqlTable("user", {
   id: varchar("id", { length: 255 }).notNull().primaryKey(),
@@ -107,4 +92,61 @@ export const verificationTokens = mysqlTable(
   (vt) => ({
     compoundKey: primaryKey(vt.identifier, vt.token),
   }),
+);
+
+export const systemFoods = mysqlTable("system-foods", {
+  id: serial("id").notNull().primaryKey(),
+  name: varchar("name", { length: 255 }),
+  unit: varchar("unit", { length: 255 })
+    .default("g")
+    .notNull()
+    .$type<FoodUnits>(),
+  protein: int("protein"),
+  carbs: int("carbs"),
+  fat: int("fat"),
+  kcal: int("kcal"),
+  createdAt: timestamp("createdAt", { mode: "date" }).defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt", { mode: "date" }).defaultNow().notNull(),
+});
+
+export const systemFoodsRelations = relations(systemFoods, ({ many }) => ({
+  likes: many(systemFoodLikes),
+}));
+
+export const userSystemFoodRelations = relations(users, ({ many }) => ({
+  likes: many(systemFoodLikes),
+}));
+
+export const systemFoodLikes = mysqlTable("system-food-likes", {
+  id: serial("id").primaryKey().notNull(),
+  systemFoodId: varchar("systemFoodId", { length: 255 }).notNull(),
+  userId: varchar("userId", { length: 255 }).notNull(),
+  liked: boolean("liked").default(false),
+});
+
+export const coachingFoods = mysqlTable(
+  "coaching-foods",
+  {
+    id: serial("id").notNull().primaryKey(),
+    name: varchar("name", { length: 255 }).notNull(),
+    brand: varchar("brand", { length: 255 }).default(""),
+    unit: varchar("unit", { length: 255 })
+      .default("g")
+      .notNull()
+      .$type<FoodUnits>(),
+    amount: int("amount").notNull(),
+    protein: int("protein").notNull(),
+    carbs: int("carbs").notNull(),
+    fat: int("fat").notNull(),
+    kcal: int("kcal").notNull(),
+    liked: boolean("liked").default(false),
+    userId: varchar("userId", { length: 255 }).notNull(),
+    createdAt: timestamp("createdAt", { mode: "date" }).defaultNow().notNull(),
+    updatedAt: timestamp("updatedAt", { mode: "date" }).defaultNow().notNull(),
+  },
+  (table) => {
+    return {
+      userIIndex: index("userIdIndex").on(table.userId),
+    };
+  },
 );
