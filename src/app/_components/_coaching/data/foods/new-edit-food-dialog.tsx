@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { useForm } from "react-hook-form";
+import { UseFormReturn, useForm } from "react-hook-form";
 import { z } from "zod";
 import {
   AlertDialog,
@@ -9,6 +9,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
+  AlertDialogCancel,
 } from "~/app/_components/ui/alert-dialog";
 import { Button } from "~/app/_components/ui/button";
 import {
@@ -32,39 +33,33 @@ import {
 import { api } from "~/trpc/react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { createFoodSchema } from "~/types/_coaching/data/foods/coaching-foods";
+import {
+  GetCoachingFoods,
+  createFoodSchema,
+} from "~/types/_coaching/data/foods/coaching-foods";
+
+type Form = UseFormReturn<
+  {
+    name: string;
+    brand: string;
+    unit: "g" | "ml" | "unit";
+    amount: number;
+    protein: number;
+    carbs: number;
+    fat: number;
+    kcal: number;
+  },
+  any,
+  undefined
+>;
 
 export const NewEditFoodDialog = ({
   triggerText,
   food,
 }: {
   triggerText: string;
-  food?: any;
+  food?: GetCoachingFoods;
 }) => {
-  return (
-    <AlertDialog>
-      <AlertDialogTrigger className="inline-flex h-10 items-center justify-center whitespace-nowrap rounded-md bg-primary  px-4 py-2 text-sm font-medium text-primary-foreground text-white ring-offset-background transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ">
-        {triggerText}
-      </AlertDialogTrigger>
-
-      <AddFoodDialog food={food} />
-    </AlertDialog>
-  );
-};
-
-const AddFoodDialog = ({ food }: { food?: any }) => {
-  const title = food ? "Redigera livsmedel" : "Skapa nytt livsmedel";
-  const createMutation = api.coachingFoods.create.useMutation();
-  const utils = api.useUtils();
-  const router = useRouter();
-
-  const onSubmit = async (values: z.infer<typeof createFoodSchema>) => {
-    await createMutation.mutateAsync(values);
-    await utils.coachingFoods.get.invalidate();
-    router.refresh();
-    toast.success("Livsmedlet skapades.");
-  };
-
   const form = useForm<z.infer<typeof createFoodSchema>>({
     resolver: zodResolver(createFoodSchema),
     defaultValues: {
@@ -78,6 +73,45 @@ const AddFoodDialog = ({ food }: { food?: any }) => {
       kcal: 0,
     },
   });
+
+  return (
+    <AlertDialog
+      onOpenChange={(state) => {
+        if (!state) {
+          form.reset();
+        }
+      }}
+    >
+      <AlertDialogTrigger className="inline-flex h-10 items-center justify-center whitespace-nowrap rounded-md bg-primary  px-4 py-2 text-sm font-medium text-primary-foreground text-white ring-offset-background transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ">
+        {triggerText}
+      </AlertDialogTrigger>
+
+      <AddFoodDialog food={food} form={form} />
+    </AlertDialog>
+  );
+};
+
+const AddFoodDialog = ({
+  food,
+
+  form,
+}: {
+  food?: GetCoachingFoods;
+
+  form: Form;
+}) => {
+  const title = food ? "Redigera livsmedel" : "Skapa nytt livsmedel";
+  const createMutation = api.coachingFoods.create.useMutation();
+  const utils = api.useUtils();
+  const router = useRouter();
+
+  const onSubmit = async (values: z.infer<typeof createFoodSchema>) => {
+    await createMutation.mutateAsync(values);
+    await utils.coachingFoods.get.invalidate();
+    router.refresh();
+    toast.success("Livsmedlet skapades.");
+    form.reset();
+  };
 
   return (
     <AlertDialogContent className="w-[800px] max-w-none">
@@ -276,17 +310,24 @@ const AddFoodDialog = ({ food }: { food?: any }) => {
           </div>
 
           <div className="mt-8">
-            <Button className=" float-right ml-4 " type="submit">
+            <Button
+              loading={createMutation.isLoading}
+              className=" float-right ml-4 "
+              type="submit"
+            >
               Skapa
             </Button>
 
-            <Button
-              variant={"secondary"}
-              className=" float-right"
-              type="button"
-            >
-              Avbryt
-            </Button>
+            <AlertDialogCancel asChild>
+              <Button
+                disabled={createMutation.isLoading}
+                variant={"secondary"}
+                className=" float-right"
+                type="button"
+              >
+                Stäng
+              </Button>
+            </AlertDialogCancel>
           </div>
         </form>
       </Form>

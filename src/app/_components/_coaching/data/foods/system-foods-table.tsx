@@ -65,7 +65,7 @@ export const SystemFoodsTable = ({
                   colSpan={SystemFoodColumns.length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  Inga resultat.
                 </TableCell>
               </TableRow>
             )}

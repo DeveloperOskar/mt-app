@@ -1,29 +1,51 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { Star } from "lucide-react";
+import { Edit, MoreHorizontal, Star, Trash } from "lucide-react";
 import { cn, fromDbUnitToDisplayUnit } from "~/app/_lib/utils";
 import { api } from "~/trpc/react";
 import { useRouter } from "next/navigation";
 import { Button } from "~/app/_components/ui/button";
 import { toast } from "sonner";
 import { GetCoachingFoods } from "~/types/_coaching/data/foods/coaching-foods";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "~/app/_components/ui/dropdown-menu";
 
 export const coachingFoodColumns: ColumnDef<GetCoachingFoods>[] = [
   {
     accessorKey: "liked",
     header: "",
+    enableHiding: false,
 
     cell: ({ row }) => {
-      //   const router = useRouter();
-      //   const createLikeMutation = api.systemFoods.createLike.useMutation();
-      //   const changeStatusMutation = api.systemFoods.likeStatus.useMutation();
-      //   const utils = api.useUtils();
+      const router = useRouter();
+      const changeLikeStatus = api.coachingFoods.changeLikeStatus.useMutation();
+      const utils = api.useUtils();
 
       const likePressed = async () => {
-        alert("like pressed");
+        await changeLikeStatus.mutateAsync({
+          liked: true,
+          foodId: row.original.id,
+        });
+        await utils.coachingFoods.get.invalidate();
+        router.refresh();
+        toast.success(`${row.original.name} har lagts till som en favorit!`);
       };
 
       const dislikePressed = async () => {
-        alert("dislike pressed");
+        await changeLikeStatus.mutateAsync({
+          liked: false,
+          foodId: row.original.id,
+        });
+        await utils.coachingFoods.get.invalidate();
+        router.refresh();
+
+        toast.info(`${row.original.name} har tagits bort som en favorit!`);
       };
 
       return (
@@ -88,5 +110,34 @@ export const coachingFoodColumns: ColumnDef<GetCoachingFoods>[] = [
     accessorKey: "kcal",
     header: "Kalorier",
     cell: ({ row }) => <div>{row.getValue("kcal")} kcal</div>,
+  },
+  {
+    id: "actions",
+    enableHiding: false,
+    cell: ({ row }) => {
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              <span className="sr-only">Open menu</span>
+              <MoreHorizontal className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+
+          <DropdownMenuContent className="mr-4 min-w-[150px]" align="end">
+            <DropdownMenuLabel>Hantera</DropdownMenuLabel>
+
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>
+              <Edit className="mr-2 h-4 w-4" /> Redigera
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Trash className="mr-2 h-4 w-4" />
+              Ta bort
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
+    },
   },
 ];

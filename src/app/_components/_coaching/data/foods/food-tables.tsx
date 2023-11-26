@@ -96,6 +96,11 @@ const FoodTables = ({
     },
   });
 
+  const getActiveTable = () => {
+    if (selectedTable === "system") return systemFoodsTable;
+    else return coachingFoodsTable;
+  };
+
   return (
     <div className="flex h-full w-full flex-col">
       <div className="flex shrink items-center justify-between py-4">
@@ -103,14 +108,22 @@ const FoodTables = ({
           <Input
             placeholder="Sök efter livsmedel..."
             value={
-              (systemFoodsTable
-                .getColumn("name")
-                ?.getFilterValue() as string) ?? ""
+              selectedTable === "system"
+                ? (systemFoodsTable
+                    .getColumn("name")
+                    ?.getFilterValue() as string) ?? ""
+                : (coachingFoodsTable
+                    .getColumn("name")
+                    ?.getFilterValue() as string) ?? ""
             }
             onChange={(event) =>
-              systemFoodsTable
-                .getColumn("name")
-                ?.setFilterValue(event.target.value)
+              selectedTable === "system"
+                ? systemFoodsTable
+                    .getColumn("name")
+                    ?.setFilterValue(event.target.value)
+                : coachingFoodsTable
+                    .getColumn("name")
+                    ?.setFilterValue(event.target.value)
             }
             className=" min-w-[300px]"
           />
@@ -142,7 +155,7 @@ const FoodTables = ({
             </DropdownMenuTrigger>
 
             <DropdownMenuContent align="end">
-              {systemFoodsTable
+              {getActiveTable()
                 .getAllColumns()
                 .filter((column) => column.getCanHide())
                 .map((column) => {

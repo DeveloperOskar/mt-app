@@ -11,6 +11,7 @@ export const SystemFoodColumns: ColumnDef<GetSystemFood>[] = [
   {
     accessorKey: "liked",
     header: "",
+    enableHiding: false,
 
     cell: ({ row }) => {
       const router = useRouter();
@@ -66,19 +67,6 @@ export const SystemFoodColumns: ColumnDef<GetSystemFood>[] = [
           />
         </Button>
       );
-      // else
-      //   return (
-      //     <Button
-      //       disabled={
-      //         changeStatusMutation.isLoading || createLikeMutation.isLoading
-      //       }
-      //       variant={"ghost"}
-      //       size={"icon"}
-      //       onClick={likePressed}
-      //     >
-      //       <Star className=" text-yellow-500" role="button" />
-      //     </Button>
-      //   );
     },
   },
   {

@@ -1,4 +1,4 @@
-import { eq, sql } from "drizzle-orm";
+import { eq, sql, desc } from "drizzle-orm";
 import { z } from "zod";
 
 import {
@@ -11,9 +11,11 @@ import { createFoodSchema } from "~/types/_coaching/data/foods/coaching-foods";
 
 export const coachingFoodsRouter = createTRPCRouter({
   get: protectedProcedure.query(async ({ ctx }) => {
-    return await ctx.db.query.coachingFoods.findMany({
-      where: eq(coachingFoods.userId, ctx.session.user.id),
-    });
+    return await ctx.db
+      .select()
+      .from(coachingFoods)
+      .where(eq(coachingFoods.userId, ctx.session.user.id))
+      .orderBy(desc(coachingFoods.liked), coachingFoods.name);
   }),
 
   create: protectedProcedure
@@ -22,5 +24,16 @@ export const coachingFoodsRouter = createTRPCRouter({
       await ctx.db
         .insert(coachingFoods)
         .values({ ...input, userId: ctx.session.user.id, liked: false });
+    }),
+
+  changeLikeStatus: protectedProcedure
+    .input(z.object({ foodId: z.number(), liked: z.boolean() }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db
+        .update(coachingFoods)
+        .set({
+          liked: input.liked,
+        })
+        .where(eq(coachingFoods.id, input.foodId));
     }),
 });
