@@ -23,6 +23,11 @@ export const coachingClientsColumns: ColumnDef<GetCoachingClient>[] = [
     cell: ({ row }) => <div>{row.getValue("name")}</div>,
   },
   {
+    accessorKey: "name",
+    header: "Namn",
+    cell: ({ row }) => <div>{row.getValue("name")}</div>,
+  },
+  {
     accessorKey: "email",
     header: "Email",
     cell: ({ row }) => <div>{row.getValue("email")}</div>,
