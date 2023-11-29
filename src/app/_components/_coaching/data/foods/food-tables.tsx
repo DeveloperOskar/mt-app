@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { SystemFoodsTable } from "./system-foods-table";
 import { GetSystemFood } from "~/types/_coaching/data/foods/system-foods";
 import { Input } from "~/app/_components/ui/input";
@@ -45,15 +45,18 @@ const FoodTables = ({
   systemFoods: GetSystemFood[];
   coachingFoods: GetCoachingFoods[];
 }) => {
-  const [selectedTable, setSelectedTable] =
-    React.useState<TableTypes>("system");
+  const [openEditFoodDialog, setOpenEditFoodDialog] = useState(false);
+  const [selectedTable, setSelectedTable] = useState<TableTypes>(
+    coachingFoods.length > 0 ? "coaching" : "system",
+  );
 
-  const [systemFoodsSorting, setSystemFoodsSorting] =
-    React.useState<SortingState>([]);
+  const [systemFoodsSorting, setSystemFoodsSorting] = useState<SortingState>(
+    [],
+  );
   const [systemFoodsColumnFilters, setSystemFoodsColumnFilters] =
-    React.useState<ColumnFiltersState>([]);
+    useState<ColumnFiltersState>([]);
   const [systemFoodsColumnVisibility, systemFoodsSetColumnVisibility] =
-    React.useState<VisibilityState>({});
+    useState<VisibilityState>({});
 
   const systemFoodsTable = useReactTable({
     data: systemFoods,
@@ -176,7 +179,14 @@ const FoodTables = ({
           </DropdownMenu>
         </div>
 
-        <NewEditFoodDialog triggerText="Nytt livsmedel" />
+        <Button onClick={(e) => setOpenEditFoodDialog(true)}>
+          Nytt livsmedel
+        </Button>
+
+        <NewEditFoodDialog
+          dialogOpen={openEditFoodDialog}
+          handleToggleDialog={setOpenEditFoodDialog}
+        />
       </div>
 
       {selectedTable === "system" && (

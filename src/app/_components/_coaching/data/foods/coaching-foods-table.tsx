@@ -62,7 +62,7 @@ export const CoachingFoodsTable = ({
             ) : (
               <TableRow>
                 <TableCell
-                  colSpan={SystemFoodColumns.length}
+                  colSpan={SystemFoodColumns.length + 2}
                   className="h-24 text-center"
                 >
                   Inga resultat.

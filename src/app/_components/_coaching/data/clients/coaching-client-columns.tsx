@@ -5,7 +5,6 @@ import { api } from "~/trpc/react";
 import { useRouter } from "next/navigation";
 import { Button } from "~/app/_components/ui/button";
 import { toast } from "sonner";
-import { GetCoachingFoods } from "~/types/_coaching/data/foods/coaching-foods";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,84 +13,19 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "~/app/_components/ui/dropdown-menu";
-import { NewEditFoodDialog } from "./new-edit-food-dialog";
 import { useState } from "react";
-import DeleteFoodDialog from "./delete-food-dialog";
+import { GetCoachingClient } from "~/types/_coaching/data/clients/coaching-clients";
 
-export const coachingFoodColumns: ColumnDef<GetCoachingFoods>[] = [
-  {
-    accessorKey: "liked",
-    header: "",
-    enableHiding: false,
-
-    cell: ({ row }) => {
-      const router = useRouter();
-      const changeLikeStatus = api.coachingFoods.changeLikeStatus.useMutation();
-      const utils = api.useUtils();
-
-      const likePressed = async () => {
-        await changeLikeStatus.mutateAsync({
-          liked: true,
-          foodId: row.original.id,
-        });
-        await utils.coachingFoods.get.invalidate();
-        router.refresh();
-        toast.success(`${row.original.name} har lagts till som en favorit!`);
-      };
-
-      const dislikePressed = async () => {
-        await changeLikeStatus.mutateAsync({
-          liked: false,
-          foodId: row.original.id,
-        });
-        await utils.coachingFoods.get.invalidate();
-        router.refresh();
-
-        toast.info(`${row.original.name} har tagits bort som en favorit!`);
-      };
-
-      return (
-        <Button
-          disabled={changeLikeStatus.isLoading}
-          variant={"ghost"}
-          size={"sm"}
-          onClick={row.original.liked ? dislikePressed : likePressed}
-        >
-          <Star
-            className={cn(
-              " text-yellow-500",
-              row.original.liked && "fill-yellow-500",
-            )}
-          />
-        </Button>
-      );
-    },
-  },
+export const coachingClientsColumns: ColumnDef<GetCoachingClient>[] = [
   {
     accessorKey: "name",
     header: "Namn",
     cell: ({ row }) => <div>{row.getValue("name")}</div>,
   },
   {
-    accessorKey: "brand",
-    header: "Märke",
-    cell: ({ row }) => (
-      <div className=" capitalize">{row.getValue("brand")}</div>
-    ),
-  },
-  {
-    accessorKey: "unit",
-    header: "Enhet",
-    cell: ({ row }) => (
-      <div className=" capitalize">
-        {fromDbUnitToDisplayUnit(row.getValue("unit"))}
-      </div>
-    ),
-  },
-  {
-    accessorKey: "amount",
-    header: "Mängd",
-    cell: ({ row }) => <div>{row.getValue("amount")}</div>,
+    accessorKey: "email",
+    header: "Email",
+    cell: ({ row }) => <div>{row.getValue("email")}</div>,
   },
   {
     accessorKey: "protein",
@@ -122,18 +56,6 @@ export const coachingFoodColumns: ColumnDef<GetCoachingFoods>[] = [
 
       return (
         <>
-          <NewEditFoodDialog
-            food={row.original}
-            dialogOpen={openEditFoodDialog}
-            handleToggleDialog={setOpenEditFoodDialog}
-          />
-          <DeleteFoodDialog
-            foodId={row.original.id}
-            foodName={row.original.name}
-            dialogOpen={openDeleteFoodDialog}
-            handleToggleDialog={setOpenDeleteFoodDialog}
-          />
-
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="h-8 w-8 p-0">

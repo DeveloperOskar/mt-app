@@ -26,6 +26,25 @@ export const coachingFoodsRouter = createTRPCRouter({
         .values({ ...input, userId: ctx.session.user.id, liked: false });
     }),
 
+  delete: protectedProcedure
+    .input(z.number())
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db.delete(coachingFoods).where(eq(coachingFoods.id, input));
+    }),
+
+  update: protectedProcedure
+    .input(createFoodSchema)
+    .mutation(async ({ ctx, input }) => {
+      if (!input.id) throw new Error("No id");
+
+      await ctx.db
+        .update(coachingFoods)
+        .set({
+          ...input,
+        })
+        .where(eq(coachingFoods.id, input.id));
+    }),
+
   changeLikeStatus: protectedProcedure
     .input(z.object({ foodId: z.number(), liked: z.boolean() }))
     .mutation(async ({ ctx, input }) => {

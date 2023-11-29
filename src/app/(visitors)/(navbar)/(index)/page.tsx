@@ -31,7 +31,7 @@ export default async function Home() {
           </Link>
         </div>
 
-        <div className="gap- mt-10 grid grid-cols-3 gap-x-6">
+        <div className="gap- mt-10 grid grid-cols-2 gap-x-6">
           <Card className=" relative border-white p-4 shadow-md">
             <p className="text-sm text-gray-700">Mer pengar</p>
             <h2 className=" mt-2 text-lg font-bold">Öka dina intäkter</h2>
@@ -48,13 +48,6 @@ export default async function Home() {
             <p className="text-xs text-gray-700">6 personer flera</p>
 
             <Heart className="absolute right-4 top-4 h-4 w-4 fill-gray-500 text-gray-500" />
-          </Card>
-          <Card className=" relative border-white p-4 shadow-md">
-            <p className="text-sm text-gray-700">Oslagbart gränssnitt</p>
-            <h2 className=" mt-2 text-lg font-bold">Nyaste tekniken</h2>
-            <p className="text-xs text-gray-700">Enkelt att använda</p>
-
-            <User className="absolute right-4 top-4 h-4 w-4 text-gray-500" />
           </Card>
         </div>
       </div>

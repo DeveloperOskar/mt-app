@@ -150,3 +150,24 @@ export const coachingFoods = mysqlTable(
     };
   },
 );
+
+export const coachingClients = mysqlTable(
+  "coaching-clients",
+  {
+    id: serial("id").notNull().primaryKey(),
+    name: varchar("name", { length: 255 }).notNull(),
+    email: varchar("email", { length: 255 }).notNull(),
+    protein: int("protein").notNull(),
+    carbs: int("carbs").notNull(),
+    fat: int("fat").notNull(),
+    kcal: int("kcal").notNull(),
+    userId: varchar("userId", { length: 255 }).notNull(),
+    createdAt: timestamp("createdAt", { mode: "date" }).defaultNow().notNull(),
+    updatedAt: timestamp("updatedAt", { mode: "date" }).defaultNow().notNull(),
+  },
+  (table) => {
+    return {
+      userIIndex: index("userIdIndex").on(table.userId),
+    };
+  },
+);

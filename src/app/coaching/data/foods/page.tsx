@@ -2,6 +2,7 @@ import React from "react";
 import FoodTables from "~/app/_components/_coaching/data/foods/food-tables";
 import { api } from "~/trpc/server";
 import { Toaster } from "sonner";
+import SingleScreenWrapper from "~/app/_components/_coaching/single-screen-wrapper";
 
 const CoachingDataFoods = async () => {
   const systemFoodsPromise = api.systemFoods.get.query();
@@ -13,11 +14,10 @@ const CoachingDataFoods = async () => {
   ]);
 
   return (
-    <main className="h-[calc(100vh-115px)] p-4">
+    <SingleScreenWrapper>
       <Toaster richColors duration={3000} />
-
       <FoodTables systemFoods={systemFoods} coachingFoods={coachingFoods} />
-    </main>
+    </SingleScreenWrapper>
   );
 };
 

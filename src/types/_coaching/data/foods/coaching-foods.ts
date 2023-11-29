@@ -1,6 +1,7 @@
 import { inferRouterOutputs } from "@trpc/server";
 import { z } from "zod";
 import { AppRouter } from "~/server/api/root";
+import { coachingFoods } from "~/server/db/schema";
 
 export const foodNumberSchema = z
   .number({
@@ -16,6 +17,7 @@ export const foodNumberSchema = z
   .default(0);
 
 export const createFoodSchema = z.object({
+  id: z.number().optional(),
   name: z
     .string()
     .min(2, {
@@ -39,6 +41,7 @@ export const createFoodSchema = z.object({
   carbs: foodNumberSchema,
   fat: foodNumberSchema,
   kcal: foodNumberSchema,
+  liked: z.boolean().default(false).optional(),
 });
 
 type RouterInput = inferRouterOutputs<AppRouter>;
