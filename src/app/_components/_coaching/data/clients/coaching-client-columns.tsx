@@ -13,14 +13,37 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "~/app/_components/ui/dropdown-menu";
-import { useState } from "react";
+import { SetStateAction, useState } from "react";
 import { GetCoachingClient } from "~/types/_coaching/data/clients/coaching-clients";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "~/app/_components/ui/avatar";
+import { NewEditClientDialog } from "./new-edit-client-dialog";
+import DeleteClientDialog from "./delete-client-dialog";
 
 export const coachingClientsColumns: ColumnDef<GetCoachingClient>[] = [
   {
-    accessorKey: "name",
-    header: "Namn",
-    cell: ({ row }) => <div>{row.getValue("name")}</div>,
+    accessorKey: "imageUrl",
+    enableHiding: false,
+    header: "",
+
+    cell: ({ row }) => {
+      return (
+        <div>
+          <Avatar className="">
+            <AvatarImage
+              src={
+                !row.original.imageUrl
+                  ? "/default_client.png"
+                  : row.original.imageUrl
+              }
+            />
+          </Avatar>
+        </div>
+      );
+    },
   },
   {
     accessorKey: "name",
@@ -56,11 +79,24 @@ export const coachingClientsColumns: ColumnDef<GetCoachingClient>[] = [
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const [openEditFoodDialog, setOpenEditFoodDialog] = useState(false);
-      const [openDeleteFoodDialog, setOpenDeleteFoodDialog] = useState(false);
+      const [openEditClientDialog, setOpenEditClientDialog] = useState(false);
+      const [openDeleteClientDialog, setOpenDeleteClientDialog] =
+        useState(false);
 
       return (
         <>
+          <NewEditClientDialog
+            dialogOpen={openEditClientDialog}
+            handleToggleDialog={setOpenEditClientDialog}
+            client={row.original}
+          />
+          <DeleteClientDialog
+            handleToggleDialog={setOpenDeleteClientDialog}
+            dialogOpen={openDeleteClientDialog}
+            clientId={row.original.id}
+            clientName={row.original.name}
+          />
+
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="h-8 w-8 p-0">
@@ -74,13 +110,13 @@ export const coachingClientsColumns: ColumnDef<GetCoachingClient>[] = [
 
               <DropdownMenuSeparator />
 
-              <DropdownMenuItem onClick={(e) => setOpenEditFoodDialog(true)}>
+              <DropdownMenuItem onClick={(e) => setOpenEditClientDialog(true)}>
                 <Edit className="mr-2 h-4 w-4" /> Redigera
               </DropdownMenuItem>
 
               <DropdownMenuItem
+                onClick={() => setOpenDeleteClientDialog(true)}
                 className="text-red-600 focus:text-red-500"
-                onClick={() => setOpenDeleteFoodDialog(true)}
               >
                 <Trash className="mr-2 h-4 w-4" /> Ta bort
               </DropdownMenuItem>

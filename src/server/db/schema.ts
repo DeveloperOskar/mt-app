@@ -161,6 +161,7 @@ export const coachingClients = mysqlTable(
     carbs: int("carbs").notNull(),
     fat: int("fat").notNull(),
     kcal: int("kcal").notNull(),
+    imageUrl: varchar("imageUrl", { length: 255 }).notNull().default(""),
     userId: varchar("userId", { length: 255 }).notNull(),
     createdAt: timestamp("createdAt", { mode: "date" }).defaultNow().notNull(),
     updatedAt: timestamp("updatedAt", { mode: "date" }).defaultNow().notNull(),

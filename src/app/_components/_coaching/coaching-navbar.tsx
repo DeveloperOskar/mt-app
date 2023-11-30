@@ -1,9 +1,9 @@
-import React from "react";
+import React, { Suspense } from "react";
 import Image from "next/image";
 import { CoachingNavLink } from "./coaching-navbar-link";
-import CoachingNavbarAvatar from "./coaching-navbar-avatar";
 import { getInitials } from "~/app/_lib/utils";
 import { getServerAuthSession } from "~/server/auth";
+import CoachingNavbarAvatar from "./coaching-navbar-avatar";
 
 const CoachingNavbar = async () => {
   const session = await getServerAuthSession();

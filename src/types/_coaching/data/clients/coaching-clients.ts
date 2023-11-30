@@ -27,11 +27,12 @@ export const createClientSchema = z.object({
     }),
   email: z
     .string()
-    .email({
-      message: "Ogiltig e-postadress.",
+    .max(50, {
+      message: "Får vara max 50 tecken.",
     })
     .optional()
     .default(""),
+  imageUrl: z.string().optional().default(""),
   protein: foodNumberSchema,
   carbs: foodNumberSchema,
   fat: foodNumberSchema,

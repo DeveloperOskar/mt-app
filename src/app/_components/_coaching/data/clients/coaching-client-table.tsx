@@ -90,10 +90,10 @@ const CoachingClientTable: React.FC<{
                 {table
                   .getAllColumns()
                   .filter((column) => column.getCanHide())
-                  .map((column) => {
+                  .map((column, index) => {
                     return (
                       <DropdownMenuCheckboxItem
-                        key={column.id}
+                        key={(column.id, +index)}
                         className="capitalize"
                         checked={column.getIsVisible()}
                         onCheckedChange={(value: boolean) =>
@@ -116,11 +116,11 @@ const CoachingClientTable: React.FC<{
         <div className="styled-scrollbar grow overflow-auto rounded-md border bg-white">
           <Table className="bg-white">
             <TableHeader>
-              {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => {
+              {table.getHeaderGroups().map((headerGroup, index) => (
+                <TableRow key={headerGroup.id + +index}>
+                  {headerGroup.headers.map((header, index) => {
                     return (
-                      <TableHead key={header.id}>
+                      <TableHead key={(header.id, +index)}>
                         {header.isPlaceholder
                           ? null
                           : flexRender(
@@ -135,13 +135,13 @@ const CoachingClientTable: React.FC<{
             </TableHeader>
             <TableBody>
               {table.getRowModel().rows?.length ? (
-                table.getRowModel().rows.map((row) => (
+                table.getRowModel().rows.map((row, index) => (
                   <TableRow
-                    key={row.id}
+                    key={row.id + index}
                     data-state={row.getIsSelected() && "selected"}
                   >
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id} className="py-3">
+                    {row.getVisibleCells().map((cell, index) => (
+                      <TableCell key={cell.id + index} className="py-3">
                         {flexRender(
                           cell.column.columnDef.cell,
                           cell.getContext(),
