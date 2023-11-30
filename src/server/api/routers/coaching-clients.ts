@@ -8,7 +8,7 @@ import {
 } from "~/server/api/trpc";
 import { coachingClients } from "~/server/db/schema";
 import { createClientSchema } from "~/types/_coaching/data/clients/coaching-clients";
-
+import { UTApi } from "uploadthing/server";
 export const coachingClientsRouter = createTRPCRouter({
   get: protectedProcedure.query(async ({ ctx }) => {
     return await ctx.db
@@ -27,22 +27,49 @@ export const coachingClientsRouter = createTRPCRouter({
     }),
 
   update: protectedProcedure
-    .input(createClientSchema)
+    .input(
+      z.object({
+        client: createClientSchema,
+        newImageKey: z.string().optional(),
+        newImageUrl: z.string().optional(),
+      }),
+    )
     .mutation(async ({ ctx, input }) => {
-      if (!input.id) throw new Error("No id provided");
+      if (!input.client.id) throw new Error("No id provided");
+
+      console.log("got image key:", input.client.imageKey);
+
+      if (input.newImageKey && input.newImageUrl) {
+        const ut = new UTApi();
+        await ut.deleteFiles(input.client.imageKey);
+      }
 
       return await ctx.db
         .update(coachingClients)
-        .set({ ...input, userId: ctx.session.user.id })
-        .where(eq(coachingClients.id, input.id));
+        .set({
+          ...input.client,
+          userId: ctx.session.user.id,
+          imageKey: input.newImageKey
+            ? input.newImageKey
+            : input.client.imageKey,
+          imageUrl: input.newImageUrl
+            ? input.newImageUrl
+            : input.client.imageUrl,
+        })
+        .where(eq(coachingClients.id, input.client.id));
     }),
   delete: protectedProcedure
-    .input(z.number())
+    .input(z.object({ id: z.number(), imageKey: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      if (!input) throw new Error("No id provided");
+      if (!input.id) throw new Error("No id provided");
+
+      if (input.imageKey && input.imageKey !== "") {
+        const ut = new UTApi();
+        await ut.deleteFiles(input.imageKey);
+      }
 
       return await ctx.db
         .delete(coachingClients)
-        .where(eq(coachingClients.id, input));
+        .where(eq(coachingClients.id, input.id));
     }),
 });

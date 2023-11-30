@@ -20,12 +20,22 @@ const DeleteClientDialog: React.FC<{
   dialogOpen: boolean;
   clientId: number;
   clientName: string;
-}> = ({ clientId, clientName, dialogOpen, handleToggleDialog }) => {
+  clientImageKey?: string;
+}> = ({
+  clientImageKey = "",
+  clientId,
+  clientName,
+  dialogOpen,
+  handleToggleDialog,
+}) => {
   const router = useRouter();
   const deleteMutation = api.coachingClients.delete.useMutation();
   const utils = api.useUtils();
   const handleDelete = async () => {
-    await deleteMutation.mutateAsync(clientId);
+    await deleteMutation.mutateAsync({
+      id: clientId,
+      imageKey: clientImageKey,
+    });
     await utils.coachingFoods.get.invalidate();
     router.refresh();
     toast.success(`${clientName} har tagits bort!`);

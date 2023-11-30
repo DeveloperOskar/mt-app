@@ -34,6 +34,7 @@ export const coachingClientsColumns: ColumnDef<GetCoachingClient>[] = [
         <div>
           <Avatar className="">
             <AvatarImage
+              className="h-full w-full object-cover"
               src={
                 !row.original.imageUrl
                   ? "/default_client.png"
@@ -95,6 +96,7 @@ export const coachingClientsColumns: ColumnDef<GetCoachingClient>[] = [
             dialogOpen={openDeleteClientDialog}
             clientId={row.original.id}
             clientName={row.original.name}
+            clientImageKey={row.original.imageKey}
           />
 
           <DropdownMenu>

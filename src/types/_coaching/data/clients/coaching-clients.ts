@@ -33,6 +33,7 @@ export const createClientSchema = z.object({
     .optional()
     .default(""),
   imageUrl: z.string().optional().default(""),
+  imageKey: z.string().optional().default(""),
   protein: foodNumberSchema,
   carbs: foodNumberSchema,
   fat: foodNumberSchema,

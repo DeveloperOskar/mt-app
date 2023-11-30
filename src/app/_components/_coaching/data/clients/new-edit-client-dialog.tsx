@@ -45,6 +45,7 @@ type Form = UseFormReturn<
     fat: number;
     kcal: number;
     imageUrl: string;
+    imageKey: string;
   },
   any,
   undefined
@@ -127,10 +128,35 @@ const AddClientDialog = ({
   const updateClient = async (values: z.infer<typeof createClientSchema>) => {
     if (!client) return;
 
+    setIsUploading(true);
+    let uploadedUrl = undefined;
+    let imageKey = undefined;
+    if (file) {
+      try {
+        const metadata = await uploadFiles("imageUploader", {
+          files: [file],
+        });
+
+        imageKey = metadata[0]?.key ?? "";
+        uploadedUrl = metadata[0]?.url ?? "";
+        setIsUploading(false);
+        toast.success("Bilden har sparats");
+      } catch (error) {
+        setIsUploading(false);
+        toast.success("Bilden kunde inte sparas");
+      }
+    }
+    setIsUploading(false);
+
     await updateMutation.mutateAsync({
-      ...values,
-      id: client.id,
-      imageUrl: client.imageUrl,
+      client: {
+        ...values,
+        id: client.id,
+        imageUrl: client.imageUrl,
+        imageKey: client.imageKey,
+      },
+      newImageUrl: uploadedUrl,
+      newImageKey: imageKey,
     });
     await utils.coachingClients.invalidate();
     toast.success(`${values.name} har sparats`);
@@ -140,12 +166,14 @@ const AddClientDialog = ({
   const createClient = async (values: z.infer<typeof createClientSchema>) => {
     setIsUploading(true);
     let uploadedUrl = "";
+    let imageKey = "";
     if (file) {
       try {
         const metadata = await uploadFiles("imageUploader", {
           files: [file],
         });
 
+        imageKey = metadata[0]?.key ?? "";
         uploadedUrl = metadata[0]?.url ?? "";
         setIsUploading(false);
         toast.success("Bilden har sparats");
@@ -154,10 +182,12 @@ const AddClientDialog = ({
         toast.success("Bilden kunde inte sparas");
       }
     }
+    setIsUploading(false);
 
     await createMutation.mutateAsync({
       ...values,
       imageUrl: uploadedUrl ?? "",
+      imageKey: imageKey ?? "",
     });
     await utils.coachingClients.invalidate();
     toast.success(`${values.name} har sparats`);
@@ -198,8 +228,8 @@ const AddClientDialog = ({
       </AlertDialogHeader>
 
       <div className="mx-auto flex flex-col items-center justify-center">
-        <Avatar className="h-20 w-20">
-          <AvatarImage src={image} />
+        <Avatar className="h-20 w-20 ">
+          <AvatarImage src={image} className="h-full w-full object-cover" />
         </Avatar>
 
         <Button onClick={openSelectImage} variant={"link"}>

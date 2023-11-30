@@ -24,7 +24,7 @@ const CoachingNavbarAvatar = ({
     <DropdownMenu>
       <DropdownMenuTrigger>
         <Avatar className="cursor-pointer border-2">
-          <AvatarImage src={image} />
+          <AvatarImage className="h-full w-full object-cover" src={image} />
           <AvatarFallback className="bg-black font-semibold text-white">
             {name}
           </AvatarFallback>
