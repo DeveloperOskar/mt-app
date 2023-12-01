@@ -2,11 +2,16 @@
 import React from "react";
 import { Button } from "~/app/_components/ui/button";
 import { signIn } from "next-auth/react";
+import { Github } from "lucide-react";
 
 const SignInGithub = () => {
   return (
-    <Button onClick={() => signIn("github")} className="w-full">
-      Logga in med Github
+    <Button
+      onClick={() => signIn("github")}
+      className="flex w-full items-center gap-2"
+    >
+      <Github className="text-white" />
+      <span>Logga in med Github</span>
     </Button>
   );
 };

@@ -3,6 +3,11 @@ import { getServerAuthSession } from "~/server/auth";
 import Image from "next/image";
 import SignInGithub from "~/app/_components/_visitors/sign-in-github";
 import { redirect } from "next/navigation";
+import SignInGoogle from "~/app/_components/_visitors/sign-in-google";
+import { Button } from "~/app/_components/ui/button";
+import { ArrowLeft } from "lucide-react";
+import { Separator } from "~/app/_components/ui/separator";
+import SignInEmail from "~/app/_components/_visitors/sign-in-email";
 
 export default async function SignIn() {
   const session = await getServerAuthSession();
@@ -14,7 +19,7 @@ export default async function SignIn() {
   return (
     <main className="container mx-auto flex h-full ">
       <section className="flex grow items-center">
-        <div className="flex w-[350px] flex-col gap-8">
+        <div className="flex w-[400px] flex-col gap-8  rounded-md bg-white p-6 shadow-md">
           <div>
             <h1 className="text-2xl font-semibold">Logga in</h1>
             <p>
@@ -25,9 +30,28 @@ export default async function SignIn() {
             </p>
           </div>
 
-          <div>
+          <SignInEmail />
+
+          <div className="flex items-center gap-3">
+            <Separator className="w-auto grow" />
+            <p className="shrink text-sm text-gray-500">Eller med</p>
+            <Separator className="w-auto grow" />
+          </div>
+
+          <div className="flex flex-col gap-4">
+            <SignInGoogle />
             <SignInGithub />
           </div>
+
+          <Link href={"/"}>
+            <Button
+              className="flex w-full items-center gap-1"
+              variant={"secondary"}
+            >
+              <ArrowLeft className="h-5 w-5" />
+              Tillbaka
+            </Button>
+          </Link>
         </div>
       </section>
 

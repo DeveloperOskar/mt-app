@@ -12,6 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "~/app/_components/ui/dropdown-menu";
 import { ArrowLeft, LogOut, User } from "lucide-react";
+import { signOut } from "next-auth/react";
 
 const CoachingNavbarAvatar = ({
   image,
@@ -45,7 +46,13 @@ const CoachingNavbarAvatar = ({
 
         <DropdownMenuSeparator />
 
-        <DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() =>
+            signOut({
+              callbackUrl: "/",
+            })
+          }
+        >
           <LogOut className="mr-2 h-4 w-4" />
           <span>Logga ut</span>
         </DropdownMenuItem>
