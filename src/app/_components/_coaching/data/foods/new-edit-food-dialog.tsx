@@ -38,6 +38,7 @@ import {
   toggleAddEditFoodDialog,
 } from "~/app/_state/coaching/data/foods/coahcingFoodsState";
 import { enableReactTracking } from "@legendapp/state/config/enableReactTracking";
+import { calculateCalories } from "~/app/_lib/utils";
 
 type Form = UseFormReturn<
   {
@@ -175,10 +176,36 @@ const AddFoodDialog = ({ form }: { form: Form }) => {
 
             <FormField
               control={form.control}
+              name="amount"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Portionsstorlek *</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      placeholder=""
+                      {...field}
+                      onChange={(event) =>
+                        field.onChange(
+                          +event.target.value !== 0 ? +event.target.value : "",
+                        )
+                      }
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    Portionsstorleken för livsmedlets angivna innehåll.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
               name="unit"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Enhet</FormLabel>
+                  <FormLabel>Enhet *</FormLabel>
 
                   <Select
                     onValueChange={field.onChange}
@@ -207,54 +234,6 @@ const AddFoodDialog = ({ form }: { form: Form }) => {
 
             <FormField
               control={form.control}
-              name="kcal"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Kalorier *</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      placeholder=""
-                      {...field}
-                      {...field}
-                      onChange={(event) =>
-                        field.onChange(
-                          +event.target.value !== 0 ? +event.target.value : "",
-                        )
-                      }
-                    />
-                  </FormControl>
-                  <FormDescription>Livsmedlets kalorier.</FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="amount"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Mängd *</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      placeholder=""
-                      {...field}
-                      onChange={(event) =>
-                        field.onChange(
-                          +event.target.value !== 0 ? +event.target.value : "",
-                        )
-                      }
-                    />
-                  </FormControl>
-                  <FormDescription>Mängd.</FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
               name="protein"
               render={({ field }) => (
                 <FormItem>
@@ -264,11 +243,22 @@ const AddFoodDialog = ({ form }: { form: Form }) => {
                       type="number"
                       placeholder=""
                       {...field}
-                      onChange={(event) =>
+                      onChange={(event) => {
+                        const protein = !event.target.value
+                          ? 0
+                          : event.target.valueAsNumber;
+                        const calories = calculateCalories(
+                          protein,
+                          form.getValues("fat"),
+                          form.getValues("carbs"),
+                        );
+
+                        form.setValue("kcal", +calories.toFixed(1));
+
                         field.onChange(
                           +event.target.value !== 0 ? +event.target.value : "",
-                        )
-                      }
+                        );
+                      }}
                     />
                   </FormControl>
                   <FormDescription>Livsmedlets protein.</FormDescription>
@@ -288,11 +278,22 @@ const AddFoodDialog = ({ form }: { form: Form }) => {
                       placeholder=""
                       {...field}
                       {...field}
-                      onChange={(event) =>
+                      onChange={(event) => {
+                        const carbs = !event.target.value
+                          ? 0
+                          : event.target.valueAsNumber;
+                        const calories = calculateCalories(
+                          form.getValues("protein"),
+                          form.getValues("fat"),
+                          carbs,
+                        );
+
+                        form.setValue("kcal", +calories.toFixed(1));
+
                         field.onChange(
                           +event.target.value !== 0 ? +event.target.value : "",
-                        )
-                      }
+                        );
+                      }}
                     />
                   </FormControl>
                   <FormDescription>Livsmedlets kolhydrater.</FormDescription>
@@ -312,6 +313,42 @@ const AddFoodDialog = ({ form }: { form: Form }) => {
                       placeholder=""
                       {...field}
                       {...field}
+                      onChange={(event) => {
+                        const fat = !event.target.value
+                          ? 0
+                          : event.target.valueAsNumber;
+                        const calories = calculateCalories(
+                          form.getValues("protein"),
+                          fat,
+                          form.getValues("carbs"),
+                        );
+
+                        form.setValue("kcal", +calories.toFixed(1));
+
+                        field.onChange(
+                          +event.target.value !== 0 ? +event.target.value : "",
+                        );
+                      }}
+                    />
+                  </FormControl>
+                  <FormDescription>Livsmedlets fett.</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="kcal"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Kalorier *</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      placeholder=""
+                      {...field}
+                      {...field}
                       onChange={(event) =>
                         field.onChange(
                           +event.target.value !== 0 ? +event.target.value : "",
@@ -319,7 +356,7 @@ const AddFoodDialog = ({ form }: { form: Form }) => {
                       }
                     />
                   </FormControl>
-                  <FormDescription>Livsmedlets fett.</FormDescription>
+                  <FormDescription>Livsmedlets kalorier.</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}

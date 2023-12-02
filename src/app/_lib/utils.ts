@@ -26,3 +26,11 @@ export function getInitials(name: string) {
 
   return initials.slice(0, 2);
 }
+
+export function calculateCalories(
+  protein: number,
+  fat: number,
+  carbs: number,
+): number {
+  return protein * 4 + fat * 9 + carbs * 4;
+}
