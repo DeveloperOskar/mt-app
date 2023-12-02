@@ -31,10 +31,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/app/_components/ui/select";
-import { NewEditFoodDialog } from "./new-edit-food-dialog";
 import { CoachingFoodsTable } from "./coaching-foods-table";
 import { GetCoachingFoods } from "~/types/_coaching/data/foods/coaching-foods";
 import { coachingFoodColumns } from "./coaching-foods-columns";
+import { toggleAddEditFoodDialog } from "~/app/_state/coaching/data/foods/coahcingFoodsState";
 
 type TableTypes = "system" | "coaching";
 
@@ -45,7 +45,6 @@ const FoodTables = ({
   systemFoods: GetSystemFood[];
   coachingFoods: GetCoachingFoods[];
 }) => {
-  const [openEditFoodDialog, setOpenEditFoodDialog] = useState(false);
   const [selectedTable, setSelectedTable] = useState<TableTypes>(
     coachingFoods.length > 0 ? "coaching" : "system",
   );
@@ -103,7 +102,6 @@ const FoodTables = ({
     if (selectedTable === "system") return systemFoodsTable;
     else return coachingFoodsTable;
   };
-
   return (
     <div className="flex h-full w-full flex-col">
       <div className="flex shrink items-center justify-between py-4">
@@ -179,14 +177,9 @@ const FoodTables = ({
           </DropdownMenu>
         </div>
 
-        <Button onClick={(e) => setOpenEditFoodDialog(true)}>
+        <Button onClick={(e) => toggleAddEditFoodDialog(true, null)}>
           Nytt livsmedel
         </Button>
-
-        <NewEditFoodDialog
-          dialogOpen={openEditFoodDialog}
-          handleToggleDialog={setOpenEditFoodDialog}
-        />
       </div>
 
       {selectedTable === "system" && (

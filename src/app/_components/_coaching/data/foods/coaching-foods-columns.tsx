@@ -14,9 +14,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "~/app/_components/ui/dropdown-menu";
-import { NewEditFoodDialog } from "./new-edit-food-dialog";
-import { useState } from "react";
-import DeleteFoodDialog from "./delete-food-dialog";
+import {
+  toggleAddEditFoodDialog,
+  toggleDeleteFoodDialog,
+} from "~/app/_state/coaching/data/foods/coahcingFoodsState";
 
 export const coachingFoodColumns: ColumnDef<GetCoachingFoods>[] = [
   {
@@ -117,23 +118,8 @@ export const coachingFoodColumns: ColumnDef<GetCoachingFoods>[] = [
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const [openEditFoodDialog, setOpenEditFoodDialog] = useState(false);
-      const [openDeleteFoodDialog, setOpenDeleteFoodDialog] = useState(false);
-
       return (
         <>
-          <NewEditFoodDialog
-            food={row.original}
-            dialogOpen={openEditFoodDialog}
-            handleToggleDialog={setOpenEditFoodDialog}
-          />
-          <DeleteFoodDialog
-            foodId={row.original.id}
-            foodName={row.original.name}
-            dialogOpen={openDeleteFoodDialog}
-            handleToggleDialog={setOpenDeleteFoodDialog}
-          />
-
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="h-8 w-8 p-0">
@@ -147,13 +133,21 @@ export const coachingFoodColumns: ColumnDef<GetCoachingFoods>[] = [
 
               <DropdownMenuSeparator />
 
-              <DropdownMenuItem onClick={(e) => setOpenEditFoodDialog(true)}>
+              <DropdownMenuItem
+                onClick={(e) => toggleAddEditFoodDialog(true, row.original)}
+              >
                 <Edit className="mr-2 h-4 w-4" /> Redigera
               </DropdownMenuItem>
 
               <DropdownMenuItem
                 className="text-red-600 focus:text-red-500"
-                onClick={() => setOpenDeleteFoodDialog(true)}
+                onClick={() =>
+                  toggleDeleteFoodDialog(
+                    true,
+                    row.original.id,
+                    row.original.name,
+                  )
+                }
               >
                 <Trash className="mr-2 h-4 w-4" /> Ta bort
               </DropdownMenuItem>

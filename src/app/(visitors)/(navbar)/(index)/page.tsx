@@ -39,7 +39,7 @@ export default async function Home() {
               I snitt 13.5% ökade intäkter
             </p>
 
-            <Receipt className="absolute right-4 top-4 h-4 w-4  text-black" />
+            <Receipt className="absolute right-4 top-4 h-4 w-4   text-green-600" />
           </Card>
 
           <Card className=" relative border-white p-4 shadow-md">
@@ -47,7 +47,7 @@ export default async function Home() {
             <h2 className=" mt-2 text-lg font-bold">Hjälp flera personer</h2>
             <p className="text-xs text-gray-700">6 personer flera</p>
 
-            <Heart className="absolute right-4 top-4 h-4 w-4 fill-black text-black" />
+            <Heart className="absolute right-4 top-4 h-4 w-4 fill-yellow-500 text-yellow-500" />
           </Card>
         </div>
       </div>

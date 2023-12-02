@@ -15,7 +15,7 @@ export const VisitorsSignInLinks = ({
           <Button variant={"secondary"}>Gå med</Button>
         </Link>
 
-        <Link href={"/sign-in"}>
+        <Link href={"/sign-in"} data-testid="sign-in-btn">
           <Button variant={"default"}>Logga in</Button>
         </Link>
       </div>
@@ -25,7 +25,7 @@ export const VisitorsSignInLinks = ({
       <div className="flex items-center gap-4">
         <VisitorSignOutBtn />
 
-        <Link href="/coaching/data/foods">
+        <Link href="/coaching/data/foods" data-testid="application-btn">
           <Button variant={"default"}>Gå till applikationen</Button>
         </Link>
       </div>

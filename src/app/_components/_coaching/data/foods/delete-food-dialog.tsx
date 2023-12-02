@@ -13,32 +13,31 @@ import {
   AlertDialogTitle,
 } from "~/app/_components/ui/alert-dialog";
 import { Button } from "~/app/_components/ui/button";
+import {
+  coachingFoodsState$,
+  toggleDeleteFoodDialog,
+} from "~/app/_state/coaching/data/foods/coahcingFoodsState";
 import { api } from "~/trpc/react";
 
-const DeleteFoodDialog: React.FC<{
-  handleToggleDialog: Dispatch<SetStateAction<boolean>>;
-  dialogOpen: boolean;
-  foodId: number;
-  foodName: string;
-}> = ({ foodId, foodName, dialogOpen, handleToggleDialog }) => {
+const DeleteFoodDialog = () => {
+  const { foodId, show, foodName } = coachingFoodsState$.deleteFoodDialog.get();
   const router = useRouter();
   const deleteMutation = api.coachingFoods.delete.useMutation();
   const utils = api.useUtils();
+
   const handleDelete = async () => {
+    if (!foodId) return;
+
     await deleteMutation.mutateAsync(foodId);
     await utils.coachingFoods.get.invalidate();
     router.refresh();
     toast.success(`${foodName} har tagits bort!`);
-    handleToggleDialog(false);
+
+    toggleDeleteFoodDialog(false, null, "");
   };
 
   return (
-    <AlertDialog
-      open={dialogOpen}
-      onOpenChange={(state) => {
-        handleToggleDialog(state);
-      }}
-    >
+    <AlertDialog open={show}>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Ta bort livsmedlet</AlertDialogTitle>
@@ -50,7 +49,10 @@ const DeleteFoodDialog: React.FC<{
         </AlertDialogHeader>
 
         <AlertDialogFooter>
-          <AlertDialogCancel asChild>
+          <AlertDialogCancel
+            asChild
+            onClick={() => toggleDeleteFoodDialog(false, null, "")}
+          >
             <Button disabled={deleteMutation.isLoading} variant={"outline"}>
               Avbryt
             </Button>

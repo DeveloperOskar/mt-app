@@ -1,5 +1,5 @@
 "use client";
-import React, { Dispatch, SetStateAction } from "react";
+import React, { useEffect } from "react";
 import { UseFormReturn, useForm } from "react-hook-form";
 import { z } from "zod";
 import {
@@ -32,10 +32,12 @@ import {
 import { api } from "~/trpc/react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { createFoodSchema } from "~/types/_coaching/data/foods/coaching-foods";
 import {
-  GetCoachingFoods,
-  createFoodSchema,
-} from "~/types/_coaching/data/foods/coaching-foods";
+  coachingFoodsState$,
+  toggleAddEditFoodDialog,
+} from "~/app/_state/coaching/data/foods/coahcingFoodsState";
+import { enableReactTracking } from "@legendapp/state/config/enableReactTracking";
 
 type Form = UseFormReturn<
   {
@@ -52,54 +54,57 @@ type Form = UseFormReturn<
   undefined
 >;
 
-export const NewEditFoodDialog = ({
-  food,
-  handleToggleDialog,
-  dialogOpen,
-}: {
-  food?: GetCoachingFoods;
-  handleToggleDialog: Dispatch<SetStateAction<boolean>>;
-  dialogOpen: boolean;
-}) => {
-  console.log("got food", food);
+enableReactTracking({
+  auto: true,
+});
+
+export const NewEditFoodDialog = () => {
+  const { food, show } = coachingFoodsState$.addEditFoodDialog.get();
 
   const form = useForm<z.infer<typeof createFoodSchema>>({
     resolver: zodResolver(createFoodSchema),
     defaultValues: {
-      name: food ? food.name : "",
-      brand: food ? food?.brand ?? "" : "",
-      unit: food ? food.unit : "g",
-      amount: food ? food.amount : 100,
-      protein: food ? food.protein : 0,
-      carbs: food ? food.carbs : 0,
-      fat: food ? food.fat : 0,
-      kcal: food ? food.kcal : 0,
+      name: "",
+      brand: "",
+      unit: "g",
+      amount: 100,
+      protein: 0,
+      carbs: 0,
+      fat: 0,
+      kcal: 0,
     },
   });
 
+  useEffect(() => {
+    if (food) {
+      form.setValue("name", food.name);
+      form.setValue("brand", food.brand ?? "");
+      form.setValue("unit", food.unit);
+      form.setValue("amount", food.amount);
+      form.setValue("protein", food.protein);
+      form.setValue("carbs", food.carbs);
+      form.setValue("fat", food.fat);
+      form.setValue("kcal", food.kcal);
+    }
+  }, [food]);
+
   return (
     <AlertDialog
-      open={dialogOpen}
+      open={show}
       onOpenChange={(state) => {
         if (!state) {
           form.reset();
         }
-
-        handleToggleDialog(state ?? false);
       }}
     >
-      <AddFoodDialog food={food} form={form} />
+      <AddFoodDialog form={form} />
     </AlertDialog>
   );
 };
 
-const AddFoodDialog = ({
-  food,
-  form,
-}: {
-  food?: GetCoachingFoods;
-  form: Form;
-}) => {
+const AddFoodDialog = ({ form }: { form: Form }) => {
+  const { food } = coachingFoodsState$.addEditFoodDialog.get();
+
   const title = food ? "Redigera livsmedel" : "Skapa nytt livsmedel";
   const createMutation = api.coachingFoods.create.useMutation();
   const updateMutation = api.coachingFoods.update.useMutation();
@@ -330,7 +335,10 @@ const AddFoodDialog = ({
               {food ? "Updatera" : "Skapa"}
             </Button>
 
-            <AlertDialogCancel asChild>
+            <AlertDialogCancel
+              asChild
+              onClick={() => toggleAddEditFoodDialog(false, null)}
+            >
               <Button
                 disabled={createMutation.isLoading || updateMutation.isLoading}
                 variant={"secondary"}

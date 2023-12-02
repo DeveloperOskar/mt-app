@@ -7,6 +7,7 @@ import Image from "next/image";
 const SignInGoogle = () => {
   return (
     <Button
+      data-testid="sign-in-google-btn"
       variant={"outline"}
       onClick={() => signIn("google")}
       className="flex w-full items-center gap-2"
