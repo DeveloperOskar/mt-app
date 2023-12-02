@@ -1,6 +1,10 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Edit, MoreHorizontal, Star, Trash } from "lucide-react";
-import { cn, fromDbUnitToDisplayUnit } from "~/app/_lib/utils";
+import {
+  cn,
+  fromDbUnitToDisplayUnit,
+  hyphenEmptyString,
+} from "~/app/_lib/utils";
 import { api } from "~/trpc/react";
 import { useRouter } from "next/navigation";
 import { Button } from "~/app/_components/ui/button";
@@ -77,7 +81,9 @@ export const coachingFoodColumns: ColumnDef<GetCoachingFoods>[] = [
     accessorKey: "brand",
     header: "Märke",
     cell: ({ row }) => (
-      <div className=" capitalize">{row.getValue("brand")}</div>
+      <div className=" capitalize">
+        {hyphenEmptyString(row.getValue("brand"))}
+      </div>
     ),
   },
   {

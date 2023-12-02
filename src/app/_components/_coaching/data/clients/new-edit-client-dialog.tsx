@@ -1,5 +1,5 @@
 "use client";
-import React, { Dispatch, SetStateAction, useEffect } from "react";
+import React, { useEffect } from "react";
 import { UseFormReturn, useForm } from "react-hook-form";
 import { z } from "zod";
 import {
@@ -21,21 +21,22 @@ import {
 } from "~/app/_components/ui/form";
 import { Input } from "~/app/_components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  GetCoachingClient,
-  createClientSchema,
-} from "~/types/_coaching/data/clients/coaching-clients";
-import {
-  UploadButton,
-  Uploader,
-  uploadFiles,
-} from "~/app/_components/ui/uploadthing";
+import { createClientSchema } from "~/types/_coaching/data/clients/coaching-clients";
+import { uploadFiles } from "~/app/_components/ui/uploadthing";
 import { Button } from "~/app/_components/ui/button";
 import { Avatar } from "~/app/_components/ui/avatar";
 import { AvatarImage } from "@radix-ui/react-avatar";
 import { toast } from "sonner";
 import { api } from "~/trpc/react";
 import { useRouter } from "next/navigation";
+import { enableReactTracking } from "@legendapp/state/config/enableReactTracking";
+import {
+  coachingClientsState$,
+  toggleAddEditClientDialog,
+} from "~/app/_state/coaching/data/clients/coachingClientsState";
+import { calculateCalories } from "~/app/_lib/utils";
+
+const defaultImage = "/default_client.png";
 type Form = UseFormReturn<
   {
     name: string;
@@ -51,51 +52,53 @@ type Form = UseFormReturn<
   undefined
 >;
 
-export const NewEditClientDialog = ({
-  client,
-  handleToggleDialog,
-  dialogOpen,
-}: {
-  client?: GetCoachingClient;
-  handleToggleDialog: Dispatch<SetStateAction<boolean>>;
-  dialogOpen: boolean;
-}) => {
+enableReactTracking({
+  auto: true,
+});
+
+export const NewEditClientDialog = () => {
+  const { show, client } = coachingClientsState$.addEditClientDialog.get();
+
   const form = useForm<z.infer<typeof createClientSchema>>({
     resolver: zodResolver(createClientSchema),
     defaultValues: {
-      name: client?.name ?? "",
-      email: client?.email ?? "",
-      protein: client?.protein ?? 0,
-      carbs: client?.carbs ?? 0,
-      fat: client?.fat ?? 0,
-      kcal: client?.kcal ?? 0,
+      name: "",
+      email: "",
+      protein: 0,
+      carbs: 0,
+      fat: 0,
+      kcal: 0,
     },
   });
 
+  useEffect(() => {
+    if (client) {
+      form.setValue("name", client.name);
+      form.setValue("email", client.email);
+      form.setValue("protein", client.protein);
+      form.setValue("carbs", client.carbs);
+      form.setValue("fat", client.fat);
+      form.setValue("kcal", client.kcal);
+    }
+  }, [client]);
+
   return (
     <AlertDialog
-      open={dialogOpen}
+      open={show}
       onOpenChange={(state) => {
         if (!state) {
           form.reset();
         }
-
-        handleToggleDialog(state ?? false);
       }}
     >
-      <AddClientDialog client={client} form={form} />
+      <AddClientDialog form={form} />
     </AlertDialog>
   );
 };
 
-const defaultImage = "/default_client.png";
-const AddClientDialog = ({
-  client,
-  form,
-}: {
-  client?: GetCoachingClient;
-  form: Form;
-}) => {
+const AddClientDialog = ({ form }: { form: Form }) => {
+  const { client, show } = coachingClientsState$.addEditClientDialog.get();
+
   const [isUploading, setIsUploading] = React.useState(false);
   const updateMutation = api.coachingClients.update.useMutation();
   const createMutation = api.coachingClients.create.useMutation();
@@ -117,6 +120,15 @@ const AddClientDialog = ({
     }
   }, [client]);
 
+  useEffect(() => {
+    if (!show) {
+      setImage(defaultImage);
+      setFile(null);
+
+      if (imageRef.current) imageRef.current.files = null;
+    }
+  }, [show]);
+
   const onSubmit = async (values: z.infer<typeof createClientSchema>) => {
     if (!client) {
       await createClient(values);
@@ -130,14 +142,15 @@ const AddClientDialog = ({
 
     setIsUploading(true);
     let uploadedUrl = undefined;
-    let imageKey = undefined;
+    let newImageKey = undefined;
+
     if (file) {
       try {
         const metadata = await uploadFiles("imageUploader", {
           files: [file],
         });
 
-        imageKey = metadata[0]?.key ?? "";
+        newImageKey = metadata[0]?.key ?? "";
         uploadedUrl = metadata[0]?.url ?? "";
         setIsUploading(false);
         toast.success("Bilden har sparats");
@@ -149,18 +162,19 @@ const AddClientDialog = ({
     setIsUploading(false);
 
     await updateMutation.mutateAsync({
-      client: {
+      updatedClient: {
         ...values,
         id: client.id,
-        imageUrl: client.imageUrl,
-        imageKey: client.imageKey,
+        imageUrl: uploadedUrl ? uploadedUrl : client.imageUrl,
+        imageKey: newImageKey ? newImageKey : client.imageKey,
       },
-      newImageUrl: uploadedUrl,
-      newImageKey: imageKey,
+      updateImage: newImageKey !== undefined && uploadedUrl !== undefined,
     });
     await utils.coachingClients.invalidate();
     toast.success(`${values.name} har sparats`);
     router.refresh();
+    form.reset();
+    toggleAddEditClientDialog(false, null);
   };
 
   const createClient = async (values: z.infer<typeof createClientSchema>) => {
@@ -290,11 +304,22 @@ const AddClientDialog = ({
                       type="number"
                       placeholder=""
                       {...field}
-                      onChange={(event) =>
+                      onChange={(event) => {
+                        const protein = !event.target.value
+                          ? 0
+                          : event.target.valueAsNumber;
+                        const calories = calculateCalories(
+                          protein,
+                          form.getValues("fat"),
+                          form.getValues("carbs"),
+                        );
+
+                        form.setValue("kcal", +calories.toFixed(1));
+
                         field.onChange(
                           +event.target.value !== 0 ? +event.target.value : "",
-                        )
-                      }
+                        );
+                      }}
                     />
                   </FormControl>
                   <FormDescription>Klientens proteinbehov.</FormDescription>
@@ -313,11 +338,22 @@ const AddClientDialog = ({
                       type="number"
                       placeholder=""
                       {...field}
-                      onChange={(event) =>
+                      onChange={(event) => {
+                        const carbs = !event.target.value
+                          ? 0
+                          : event.target.valueAsNumber;
+                        const calories = calculateCalories(
+                          form.getValues("protein"),
+                          form.getValues("fat"),
+                          carbs,
+                        );
+
+                        form.setValue("kcal", +calories.toFixed(1));
+
                         field.onChange(
                           +event.target.value !== 0 ? +event.target.value : "",
-                        )
-                      }
+                        );
+                      }}
                     />
                   </FormControl>
                   <FormDescription>Klientens kolhydratsbehov.</FormDescription>
@@ -336,11 +372,22 @@ const AddClientDialog = ({
                       type="number"
                       placeholder=""
                       {...field}
-                      onChange={(event) =>
+                      onChange={(event) => {
+                        const fat = !event.target.value
+                          ? 0
+                          : event.target.valueAsNumber;
+                        const calories = calculateCalories(
+                          form.getValues("protein"),
+                          fat,
+                          form.getValues("carbs"),
+                        );
+
+                        form.setValue("kcal", +calories.toFixed(1));
+
                         field.onChange(
                           +event.target.value !== 0 ? +event.target.value : "",
-                        )
-                      }
+                        );
+                      }}
                     />
                   </FormControl>
                   <FormDescription>Klientens fettbehov.</FormDescription>
@@ -388,6 +435,7 @@ const AddClientDialog = ({
 
             <AlertDialogCancel asChild>
               <Button
+                onClick={() => toggleAddEditClientDialog(false, null)}
                 disabled={
                   createMutation.isLoading ||
                   isUploading ||

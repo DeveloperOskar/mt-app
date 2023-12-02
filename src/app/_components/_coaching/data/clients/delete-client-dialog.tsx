@@ -1,10 +1,9 @@
 "use client";
 import { useRouter } from "next/navigation";
-import React, { Dispatch, SetStateAction } from "react";
+import React from "react";
 import { toast } from "sonner";
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -14,53 +13,53 @@ import {
 } from "~/app/_components/ui/alert-dialog";
 import { Button } from "~/app/_components/ui/button";
 import { api } from "~/trpc/react";
+import { enableReactTracking } from "@legendapp/state/config/enableReactTracking";
+import {
+  coachingClientsState$,
+  toggleDeleteClientDialog,
+} from "~/app/_state/coaching/data/clients/coachingClientsState";
 
-const DeleteClientDialog: React.FC<{
-  handleToggleDialog: Dispatch<SetStateAction<boolean>>;
-  dialogOpen: boolean;
-  clientId: number;
-  clientName: string;
-  clientImageKey?: string;
-}> = ({
-  clientImageKey = "",
-  clientId,
-  clientName,
-  dialogOpen,
-  handleToggleDialog,
-}) => {
+enableReactTracking({
+  auto: true,
+});
+
+const DeleteClientDialog = () => {
+  const { client, show } = coachingClientsState$.deleteClientDialog.get();
+
   const router = useRouter();
   const deleteMutation = api.coachingClients.delete.useMutation();
   const utils = api.useUtils();
+
   const handleDelete = async () => {
+    if (!client) return;
+
     await deleteMutation.mutateAsync({
-      id: clientId,
-      imageKey: clientImageKey,
+      id: client.id,
+      imageKey: client?.imageKey,
     });
     await utils.coachingFoods.get.invalidate();
     router.refresh();
-    toast.success(`${clientName} har tagits bort!`);
-    handleToggleDialog(false);
+    toast.success(`${client.name} har tagits bort!`);
+    toggleDeleteClientDialog(false, null);
   };
 
   return (
-    <AlertDialog
-      open={dialogOpen}
-      onOpenChange={(state) => {
-        handleToggleDialog(state);
-      }}
-    >
+    <AlertDialog open={show}>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Ta bort livsmedlet</AlertDialogTitle>
           <AlertDialogDescription>
             Är du säkert på att du vill ta bort{" "}
-            <span className="font-bold"> {clientName}</span>? Detta går inte att
-            ångra.
+            <span className="font-bold"> {client?.name}</span>? Detta går inte
+            att ångra.
           </AlertDialogDescription>
         </AlertDialogHeader>
 
         <AlertDialogFooter>
-          <AlertDialogCancel asChild>
+          <AlertDialogCancel
+            asChild
+            onClick={() => toggleDeleteClientDialog(false, null)}
+          >
             <Button disabled={deleteMutation.isLoading} variant={"outline"}>
               Avbryt
             </Button>

@@ -34,3 +34,7 @@ export function calculateCalories(
 ): number {
   return protein * 4 + fat * 9 + carbs * 4;
 }
+
+export function hyphenEmptyString(value: string) {
+  return value === "" ? "-" : value;
+}

@@ -28,35 +28,33 @@ export const coachingClientsRouter = createTRPCRouter({
 
   update: protectedProcedure
     .input(
-      z.object({
-        client: createClientSchema,
-        newImageKey: z.string().optional(),
-        newImageUrl: z.string().optional(),
-      }),
+      z.object({ updatedClient: createClientSchema, updateImage: z.boolean() }),
     )
     .mutation(async ({ ctx, input }) => {
-      if (!input.client.id) throw new Error("No id provided");
+      if (!input.updatedClient.id) throw new Error("No id provided");
 
-      console.log("got image key:", input.client.imageKey);
-
-      if (input.newImageKey && input.newImageUrl) {
+      //user has uploaded a new image we remove the old one first
+      if (input.updateImage) {
         const ut = new UTApi();
-        await ut.deleteFiles(input.client.imageKey);
+        const selectedClient = await ctx.db
+          .select()
+          .from(coachingClients)
+          .where(eq(coachingClients.id, input.updatedClient.id));
+
+        if (selectedClient[0]?.imageKey) {
+          await ut.deleteFiles(selectedClient[0].imageKey);
+        }
       }
+
+      console.log("input", input.updatedClient);
 
       return await ctx.db
         .update(coachingClients)
         .set({
-          ...input.client,
+          ...input.updatedClient,
           userId: ctx.session.user.id,
-          imageKey: input.newImageKey
-            ? input.newImageKey
-            : input.client.imageKey,
-          imageUrl: input.newImageUrl
-            ? input.newImageUrl
-            : input.client.imageUrl,
         })
-        .where(eq(coachingClients.id, input.client.id));
+        .where(eq(coachingClients.id, input.updatedClient.id));
     }),
   delete: protectedProcedure
     .input(z.object({ id: z.number(), imageKey: z.string() }))

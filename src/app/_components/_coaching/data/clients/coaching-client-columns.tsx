@@ -1,6 +1,10 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Edit, MoreHorizontal, Star, Trash } from "lucide-react";
-import { cn, fromDbUnitToDisplayUnit } from "~/app/_lib/utils";
+import {
+  cn,
+  fromDbUnitToDisplayUnit,
+  hyphenEmptyString,
+} from "~/app/_lib/utils";
 import { api } from "~/trpc/react";
 import { useRouter } from "next/navigation";
 import { Button } from "~/app/_components/ui/button";
@@ -22,6 +26,10 @@ import {
 } from "~/app/_components/ui/avatar";
 import { NewEditClientDialog } from "./new-edit-client-dialog";
 import DeleteClientDialog from "./delete-client-dialog";
+import {
+  toggleAddEditClientDialog,
+  toggleDeleteClientDialog,
+} from "~/app/_state/coaching/data/clients/coachingClientsState";
 
 export const coachingClientsColumns: ColumnDef<GetCoachingClient>[] = [
   {
@@ -54,7 +62,7 @@ export const coachingClientsColumns: ColumnDef<GetCoachingClient>[] = [
   {
     accessorKey: "email",
     header: "Email",
-    cell: ({ row }) => <div>{row.getValue("email")}</div>,
+    cell: ({ row }) => <div>{hyphenEmptyString(row.getValue("email"))}</div>,
   },
   {
     accessorKey: "protein",
@@ -80,25 +88,8 @@ export const coachingClientsColumns: ColumnDef<GetCoachingClient>[] = [
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const [openEditClientDialog, setOpenEditClientDialog] = useState(false);
-      const [openDeleteClientDialog, setOpenDeleteClientDialog] =
-        useState(false);
-
       return (
         <>
-          <NewEditClientDialog
-            dialogOpen={openEditClientDialog}
-            handleToggleDialog={setOpenEditClientDialog}
-            client={row.original}
-          />
-          <DeleteClientDialog
-            handleToggleDialog={setOpenDeleteClientDialog}
-            dialogOpen={openDeleteClientDialog}
-            clientId={row.original.id}
-            clientName={row.original.name}
-            clientImageKey={row.original.imageKey}
-          />
-
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="h-8 w-8 p-0">
@@ -112,12 +103,14 @@ export const coachingClientsColumns: ColumnDef<GetCoachingClient>[] = [
 
               <DropdownMenuSeparator />
 
-              <DropdownMenuItem onClick={(e) => setOpenEditClientDialog(true)}>
+              <DropdownMenuItem
+                onClick={(e) => toggleAddEditClientDialog(true, row.original)}
+              >
                 <Edit className="mr-2 h-4 w-4" /> Redigera
               </DropdownMenuItem>
 
               <DropdownMenuItem
-                onClick={() => setOpenDeleteClientDialog(true)}
+                onClick={() => toggleDeleteClientDialog(true, row.original)}
                 className="text-red-600 focus:text-red-500"
               >
                 <Trash className="mr-2 h-4 w-4" /> Ta bort

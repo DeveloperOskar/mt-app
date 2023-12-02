@@ -31,13 +31,11 @@ import {
   TableHeader,
   TableRow,
 } from "~/app/_components/ui/table";
-import { NewEditClientDialog } from "./new-edit-client-dialog";
+import { toggleAddEditClientDialog } from "~/app/_state/coaching/data/clients/coachingClientsState";
 
 const CoachingClientTable: React.FC<{
   coachingClients: GetCoachingClient[];
 }> = ({ coachingClients }) => {
-  const [openNewEditClientDialog, setOpenNewEditClientDialog] = useState(false);
-
   const [sorting, setSorting] = useState<SortingState>([]);
   const [filters, setFilters] = useState<ColumnFiltersState>([]);
   const [visibility, setVisibility] = useState<VisibilityState>({});
@@ -61,10 +59,6 @@ const CoachingClientTable: React.FC<{
 
   return (
     <>
-      <NewEditClientDialog
-        dialogOpen={openNewEditClientDialog}
-        handleToggleDialog={setOpenNewEditClientDialog}
-      />
       <div className="flex h-full w-full flex-col">
         <div className="flex shrink items-center justify-between py-4">
           <div className="flex items-center gap-4">
@@ -108,7 +102,7 @@ const CoachingClientTable: React.FC<{
             </DropdownMenu>
           </div>
 
-          <Button onClick={(e) => setOpenNewEditClientDialog(true)}>
+          <Button onClick={(e) => toggleAddEditClientDialog(true, null)}>
             Ny klient
           </Button>
         </div>
