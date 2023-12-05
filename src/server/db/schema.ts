@@ -101,6 +101,7 @@ export const systemFoods = mysqlTable("system-foods", {
     .default("g")
     .notNull()
     .$type<FoodUnits>(),
+  amount: int("amount").notNull().default(100),
   protein: int("protein"),
   carbs: int("carbs"),
   fat: int("fat"),

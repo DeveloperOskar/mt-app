@@ -46,6 +46,7 @@ export const systemFoodsRouter = createTRPCRouter({
       ${systemFoods.carbs}, 
       ${systemFoods.fat}, 
       ${systemFoods.kcal}, 
+      ${systemFoods.amount}, 
       ${systemFoods.unit}, 
       ${systemFoodLikes.liked} ,
       ${systemFoodLikes.id} AS likeId
@@ -63,6 +64,7 @@ export const systemFoodsRouter = createTRPCRouter({
       carbs: number;
       fat: number;
       kcal: number;
+      amount: number;
       unit: string;
       liked: boolean | null;
       likeId: string | null;

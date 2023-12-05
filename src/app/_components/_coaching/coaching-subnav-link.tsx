@@ -4,8 +4,18 @@ import { usePathname } from "next/navigation";
 import React from "react";
 import { cn } from "~/app/_lib/utils";
 
-const CoachingSubNavLink = ({ href, text }: { href: string; text: string }) => {
+const CoachingSubNavLink = ({
+  href,
+  text,
+  part,
+}: {
+  part: string;
+  href: string;
+  text: string;
+}) => {
   const pathname = usePathname();
+
+  if (!pathname.includes(part)) return null;
 
   return (
     <Link

@@ -38,3 +38,6 @@ export function calculateCalories(
 export function hyphenEmptyString(value: string) {
   return value === "" ? "-" : value;
 }
+export function showDecimalIfNotZero(value: number, decimals = 1) {
+  return Number(value.toFixed(decimals));
+}

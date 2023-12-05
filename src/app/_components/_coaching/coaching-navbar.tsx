@@ -26,10 +26,14 @@ const CoachingNavbar = async () => {
         </div>
 
         <ul className="flex items-center gap-4">
-          <CoachingNavLink text="Data" href="/" matcher={"data"} />
+          <CoachingNavLink
+            text="Data"
+            href="/coaching/data/foods"
+            matcher={"data"}
+          />
           <CoachingNavLink
             text="Verktyg"
-            href="/tools/meal-plan"
+            href="/coaching/tools/meal-plan"
             matcher={"tools"}
           />
         </ul>
