@@ -1,16 +1,27 @@
 "use client";
 
 import { enableReactTracking } from "@legendapp/state/config/enableReactTracking";
+import { CalendarIcon } from "lucide-react";
 import React from "react";
 import { Avatar, AvatarFallback } from "~/app/_components/ui/avatar";
 import { Button } from "~/app/_components/ui/button";
+import { Calendar } from "~/app/_components/ui/calendar";
 import { Card } from "~/app/_components/ui/card";
-import { getInitials, showDecimalIfNotZero } from "~/app/_lib/utils";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "~/app/_components/ui/popover";
+import { cn, getInitials, showDecimalIfNotZero } from "~/app/_lib/utils";
 import {
   calculateMealsTotal,
   coachingMealPlanState$,
 } from "~/app/_state/coaching/tools/meal-plan/coachingMealPlanState";
 import { GetCoachingClient } from "~/types/_coaching/data/clients/coaching-clients";
+import { format } from "date-fns";
+import { Label } from "~/app/_components/ui/label";
+import { sv } from "date-fns/locale";
+import { Checkbox } from "~/app/_components/ui/checkbox";
 
 enableReactTracking({
   auto: true,
@@ -26,90 +37,120 @@ const Summary = () => {
     calculateMealsTotal(meals);
 
   return (
-    <Card className="rounded-md-none h-full basis-[380px] border-t-0 p-4">
-      <Button
-        className="mx-auto block"
-        variant={"default"}
-        size={"sm"}
-        onClick={() => {
-          coachingMealPlanState$.set((state) => ({
-            ...state,
-            selectClientDialog: { ...state.selectClientDialog, show: true },
-          }));
-        }}
-      >
-        {selectedClient ? "Byt klient" : "Välj klient"}
-      </Button>
+    <Card className="flex h-full basis-[280px] flex-col gap-6 rounded-none border-t-0 py-4 ">
+      <div className="flex flex-col gap-3  px-4">
+        <Label>
+          <span className="mb-1 block">Startdatum</span>
+          <DatePicker label={"Välj startdatum"} />
+        </Label>
+
+        <Label>
+          <span className="mb-1 block">Slutdatum </span>
+          <DatePicker label={"Välj slutdatum"} />
+        </Label>
+      </div>
+
+      <div className="flex items-center space-x-2 px-4">
+        <Checkbox id="terms2" />
+        <label
+          htmlFor="terms2"
+          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        >
+          Inkludera mig som författare
+        </label>
+      </div>
+
+      <div className="flex flex-col gap-3 px-4">
+        <Button
+          className="mx-auto block w-full"
+          variant={"default"}
+          size={"sm"}
+          onClick={() => {
+            coachingMealPlanState$.set((state) => ({
+              ...state,
+              selectClientDialog: { ...state.selectClientDialog, show: true },
+            }));
+          }}
+        >
+          {selectedClient ? "Byt klient" : "Välj klient"}
+        </Button>
+
+        {selectedClient && (
+          <Button
+            onClick={() => {
+              coachingMealPlanState$.set((state) => ({
+                ...state,
+                selectClientDialog: {
+                  ...state.selectClientDialog,
+                  selectedClient: undefined,
+                },
+              }));
+            }}
+            variant={"outline"}
+          >
+            Ångra
+          </Button>
+        )}
+      </div>
 
       {selectedClient && <ClientInfo client={selectedClient} />}
 
-      <h1 className="mt-10 text-center text-2xl font-semibold">Totalt</h1>
+      <div className="flex flex-col gap-3">
+        <h1 className="px-4 text-start text-xl font-semibold">Totalt</h1>
 
-      {!selectedClient ? (
-        <NoClientSummary
+        <MacrosSummary
           totalKcal={totalKcal}
           totalProtein={totalProtein}
           totalCarbs={totalCarbs}
           totalFat={totalFat}
+          clientProtein={selectedClient?.protein}
+          clientCarbs={selectedClient?.carbs}
+          clientFat={selectedClient?.fat}
+          clientKcal={selectedClient?.kcal}
         />
-      ) : (
-        <ClientSummary
-          totalKcal={totalKcal}
-          totalProtein={totalProtein}
-          totalCarbs={totalCarbs}
-          totalFat={totalFat}
-          clientProtein={selectedClient.protein}
-          clientCarbs={selectedClient.carbs}
-          clientFat={selectedClient.fat}
-          clientKcal={selectedClient.kcal}
-        />
-      )}
+      </div>
     </Card>
   );
 };
 
-const NoClientSummary = ({
-  totalCarbs,
-  totalFat,
-  totalKcal,
-  totalProtein,
-}: {
-  totalKcal: number;
-  totalProtein: number;
-  totalCarbs: number;
-  totalFat: number;
-}) => {
+const DatePicker: React.FC<{ label: string }> = ({ label }) => {
+  const [date, setDate] = React.useState<Date>();
+
   return (
-    <>
-      <div className="mx-auto mt-3 flex w-fit min-w-[150px] flex-col rounded-md bg-accent p-2 text-center">
-        <p className="text-xs font-semibold text-gray-700">Kalorier</p>
-        <p className="text-base">{totalKcal.toFixed(0)} kcal</p>
-      </div>
-
-      <div className="mt-4 grid grid-cols-3 gap-3 ">
-        <div className="flex flex-col rounded-md bg-accent p-2 text-center">
-          <p className="text-xs font-semibold text-gray-700">Protein</p>
-          <p className="text-base">{totalProtein.toFixed(1)} g</p>
-        </div>
-
-        <div className="flex flex-col rounded-md bg-accent p-2 text-center">
-          <p className="text-xs font-semibold text-gray-700">Kolhydrater</p>
-          <p className="text-base">{totalCarbs.toFixed(1)} g</p>
-        </div>
-
-        <div className="flex flex-col rounded-md bg-accent p-2 text-center">
-          <p className="text-xs font-semibold text-gray-700">Fett</p>
-          <p className="text-base"> {totalFat.toFixed(1)} g</p>
-        </div>
-      </div>
-    </>
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button
+          variant={"outline"}
+          className={cn(
+            "w-full justify-start text-left font-normal",
+            !date && "text-muted-foreground",
+          )}
+        >
+          <CalendarIcon className="mr-2 h-4 w-4" />
+          {date ? (
+            format(date, "PPP", {
+              locale: sv,
+            })
+          ) : (
+            <span>{label}</span>
+          )}
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-auto p-0">
+        <Calendar
+          mode="single"
+          selected={date}
+          onSelect={setDate}
+          initialFocus
+        />
+      </PopoverContent>
+    </Popover>
   );
 };
 
 const ClientInfo = ({ client }: { client: GetCoachingClient }) => {
   return (
-    <div className="mt-3 flex flex-col items-center justify-center gap-1 text-center">
-      <p className="text-xs text-gray-700">Vald klient</p>
+    <div className="flex flex-col items-center justify-center gap-1 text-center">
       <Avatar className="h-16 w-16 text-base">
         <AvatarFallback
           style={{
@@ -129,7 +170,7 @@ const ClientInfo = ({ client }: { client: GetCoachingClient }) => {
   );
 };
 
-const ClientSummary = ({
+const MacrosSummary = ({
   totalCarbs,
   totalFat,
   totalKcal,
@@ -143,40 +184,41 @@ const ClientSummary = ({
   totalProtein: number;
   totalCarbs: number;
   totalFat: number;
-  clientProtein: number;
-  clientCarbs: number;
-  clientFat: number;
-  clientKcal: number;
+  clientProtein: number | undefined;
+  clientCarbs: number | undefined;
+  clientFat: number | undefined;
+  clientKcal: number | undefined;
 }) => {
   return (
     <>
-      <div className="mx-auto mt-3 flex w-fit flex-col rounded-md bg-accent p-2 text-center">
-        <p className="text-xs font-semibold text-gray-700">Kalorier</p>
-        <p className="text-base">
-          {totalKcal.toFixed(0)} / {clientKcal} kcal
+      <div className="mx-auto flex  w-full flex-col  rounded bg-accent px-4 py-2">
+        <p className="text-sm font-semibold text-gray-700">Kalorier</p>
+        <p className="text-sm">
+          {totalKcal.toFixed(0)} {clientKcal && "/ " + clientKcal} kcal
         </p>
       </div>
 
-      <div className="mt-4 grid grid-cols-3 gap-3 ">
-        <div className="flex flex-col rounded-md bg-accent p-2 text-center">
-          <p className="text-xs font-semibold text-gray-700">Protein</p>
-          <p className="text-base">
-            {showDecimalIfNotZero(totalProtein)} / {clientProtein} g
-          </p>
-        </div>
+      <div className="mx-auto  flex  w-full flex-col  rounded bg-accent px-4 py-2">
+        <p className="text-sm font-semibold text-gray-700">Protein</p>
+        <p className="text-sm">
+          {showDecimalIfNotZero(totalProtein)}{" "}
+          {clientProtein && "/ " + clientProtein} g
+        </p>
+      </div>
 
-        <div className="flex flex-col rounded-md bg-accent p-2 text-center">
-          <p className="text-xs font-semibold text-gray-700">Kolhydrater</p>
-          <p className="text-base">
-            {showDecimalIfNotZero(totalCarbs)} / {clientCarbs} g
-          </p>
-        </div>
-        <div className="flex flex-col rounded-md bg-accent p-2 text-center">
-          <p className="text-xs font-semibold text-gray-700">Fett</p>
-          <p className="text-base">
-            {showDecimalIfNotZero(totalFat)} / {clientFat} g
-          </p>
-        </div>
+      <div className="mx-auto flex  w-full flex-col  rounded bg-accent px-4 py-2">
+        <p className="text-sm font-semibold text-gray-700">Kolhydrater</p>
+        <p className="text-sm">
+          {showDecimalIfNotZero(totalCarbs)} {clientCarbs && "/ " + clientCarbs}{" "}
+          g
+        </p>
+      </div>
+
+      <div className="mx-auto   flex  w-full flex-col  rounded bg-accent px-4 py-2">
+        <p className="text-sm font-semibold text-gray-700">Fett</p>
+        <p className="text-sm">
+          {showDecimalIfNotZero(totalFat)} {clientFat && "/ " + clientFat}g
+        </p>
       </div>
     </>
   );

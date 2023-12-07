@@ -4,7 +4,7 @@ import { Button } from "../ui/button";
 import { signIn } from "next-auth/react";
 import Image from "next/image";
 
-const SignInGoogle = () => {
+const SignInGoogle: React.FC<{ isSignIn: boolean }> = ({ isSignIn }) => {
   return (
     <Button
       data-testid="sign-in-google-btn"
@@ -18,7 +18,7 @@ const SignInGoogle = () => {
         width={25}
         height={25}
       />
-      Logga in med Google
+      {isSignIn ? "Logga in" : "Registrera dig"} med Google
     </Button>
   );
 };

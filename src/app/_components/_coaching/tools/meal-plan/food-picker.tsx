@@ -21,7 +21,7 @@ const FoodPicker: React.FC<{
   systemFoods: GetSystemFood[];
 }> = ({ coachingFoods, systemFoods }) => {
   const [selectedFood, setSelectedFood] = React.useState<"coaching" | "system">(
-    "coaching",
+    coachingFoods.length > 0 ? "coaching" : "system",
   );
   const [search, setSearch] = React.useState("");
 
@@ -179,8 +179,8 @@ const FoodCard: React.FC<TransferFoodData> = ({
 
       <Star
         className={cn(
-          "absolute right-4 top-4 text-yellow-500",
-          liked && "fill-yellow-500",
+          "absolute right-4 top-4 text-yellow-300",
+          liked && "fill-yellow-300",
         )}
       />
     </Card>

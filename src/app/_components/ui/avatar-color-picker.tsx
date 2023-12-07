@@ -14,23 +14,22 @@ export const AVATAR_BASE_BACKGROUND_COLOR = "#F1F5F9";
 export function AvatarColorPicker({
   background: [bg, setBg],
   textColor: [color, setColor],
-  name = "-",
+  name,
 }: {
   name: string;
   background: [string, Dispatch<SetStateAction<string>>];
   textColor: [string, Dispatch<SetStateAction<string>>];
 }) {
   const solids = [
-    "#E2E2E2",
-    "#ff75c3",
-    "#ffa647",
-    "#ffe83f",
-    "#9fff5b",
-    "#70e2ff",
-    "#cd93ff",
-    "#09203f",
-    "#272E3F",
-    "#F1F5F9",
+    "#7C3AED",
+    "#F97316",
+    "#16A34A",
+    "#2563EB",
+    "#E11D48",
+    "#18181B",
+    AVATAR_BASE_BACKGROUND_COLOR,
+    "#FACC15",
+    AVATAR_BASE_TEXT_COLOR,
   ];
 
   return (
@@ -48,7 +47,7 @@ export function AvatarColorPicker({
                 color: color,
               }}
             >
-              <span>{getInitials(name)}</span>
+              <span>{name ? getInitials(name) : "MT"}</span>
             </AvatarFallback>
           </Avatar>
           <Pipette className="absolute bottom-0 right-[-10px] h-4 w-4" />

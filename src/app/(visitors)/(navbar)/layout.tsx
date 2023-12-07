@@ -3,6 +3,7 @@ import "~/styles/globals.css";
 import { cookies } from "next/headers";
 import { TRPCReactProvider } from "~/trpc/react";
 import VisitorNavbar from "~/app/_components/_visitors/visitor-navbar";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export const metadata = {
   title: "MyTeam - Bästa platformen för coacher",
@@ -23,6 +24,7 @@ export default function RootLayout({
         <TRPCReactProvider cookies={cookies().toString()}>
           {children}
         </TRPCReactProvider>
+        <SpeedInsights />
       </body>
     </html>
   );

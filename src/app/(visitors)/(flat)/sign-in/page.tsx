@@ -41,8 +41,8 @@ export default async function SignIn() {
           </div> */}
 
           <div className="flex flex-col gap-4">
-            <SignInGoogle />
-            <SignInGithub />
+            <SignInGoogle isSignIn={true} />
+            <SignInGithub isSignIn={true} />
           </div>
 
           <Link href={"/"}>

@@ -61,8 +61,8 @@ export const SystemFoodColumns: ColumnDef<GetSystemFood>[] = [
         >
           <Star
             className={cn(
-              " text-yellow-500",
-              row.original.liked && "fill-yellow-500",
+              " text-yellow-300",
+              row.original.liked && "fill-yellow-300",
             )}
           />
         </Button>

@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import { TRPCReactProvider } from "~/trpc/react";
 import CoachingNavbar from "../_components/_coaching/coaching-navbar";
 import CoachingSubNav from "../_components/_coaching/coaching-subnav";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export const metadata = {
   title: "Create T3 App",
@@ -25,6 +26,7 @@ export default function RootLayout({
         <TRPCReactProvider cookies={cookies().toString()}>
           {children}
         </TRPCReactProvider>
+        <SpeedInsights />
       </body>
     </html>
   );

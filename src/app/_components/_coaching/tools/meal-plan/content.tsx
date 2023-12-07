@@ -99,7 +99,7 @@ const MealCard: React.FC<{ meal: MealPlanMeal }> = ({ meal }) => {
           <Button
             variant={"ghost"}
             className={cn(
-              "flex h-[unset] w-full items-center  justify-between rounded-none px-4 py-2",
+              "flex h-[unset] w-full items-center  justify-between rounded-none  py-2",
               open && "bg-accent text-accent-foreground",
             )}
           >
@@ -141,40 +141,44 @@ const MealCard: React.FC<{ meal: MealPlanMeal }> = ({ meal }) => {
         </CollapsibleTrigger>
 
         <CollapsibleContent>
-          <div className="px-4 pt-6">
-            <Label htmlFor={meal.name + "-name"}>Namn</Label>
-            <Input
-              onChange={(e) => {
-                coachingMealPlanState$.set((state) => ({
-                  ...state,
-                  meals: state.meals.map((m) =>
-                    m.id === meal.id ? { ...m, name: e.target.value } : m,
-                  ),
-                }));
-              }}
-              value={meal.name}
-              type="text"
-              id={meal.name + "-name"}
-              className="mt-1 min-h-[unset] resize-none"
-            />
+          <div className="flex flex-col gap-3 px-4 pt-6">
+            <div>
+              <Label htmlFor={meal.name + "-name"}>Namn</Label>
+              <Input
+                onChange={(e) => {
+                  coachingMealPlanState$.set((state) => ({
+                    ...state,
+                    meals: state.meals.map((m) =>
+                      m.id === meal.id ? { ...m, name: e.target.value } : m,
+                    ),
+                  }));
+                }}
+                value={meal.name}
+                type="text"
+                id={meal.name + "-name"}
+                className="mt-1 min-h-[unset] resize-none"
+              />
+            </div>
 
-            <Label htmlFor={meal.name + "-info"}>Beskrivning</Label>
-            <Textarea
-              value={meal.description}
-              onChange={(e) => {
-                coachingMealPlanState$.set((state) => ({
-                  ...state,
-                  meals: state.meals.map((m) =>
-                    m.id === meal.id
-                      ? { ...m, description: e.target.value }
-                      : m,
-                  ),
-                }));
-              }}
-              id={meal.name + "-info"}
-              className="mt-1 min-h-[unset] resize-none"
-              rows={2}
-            />
+            <div>
+              <Label htmlFor={meal.name + "-info"}>Beskrivning</Label>
+              <Textarea
+                value={meal.description}
+                onChange={(e) => {
+                  coachingMealPlanState$.set((state) => ({
+                    ...state,
+                    meals: state.meals.map((m) =>
+                      m.id === meal.id
+                        ? { ...m, description: e.target.value }
+                        : m,
+                    ),
+                  }));
+                }}
+                id={meal.name + "-info"}
+                className="mt-1 min-h-[unset] resize-none"
+                rows={2}
+              />
+            </div>
           </div>
 
           <div className="mt-4 px-4 pb-6 ">
