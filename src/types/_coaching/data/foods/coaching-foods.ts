@@ -1,7 +1,6 @@
-import { inferRouterOutputs } from "@trpc/server";
+import type { inferRouterOutputs } from "@trpc/server";
 import { z } from "zod";
-import { AppRouter } from "~/server/api/root";
-import { coachingFoods } from "~/server/db/schema";
+import type { AppRouter } from "~/server/api/root";
 
 export const foodNumberSchema = z
   .number({

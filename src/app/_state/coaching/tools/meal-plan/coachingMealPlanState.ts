@@ -17,6 +17,7 @@ export interface TransferFoodData {
   calculatedCarbs: number;
   calculatedFat: number;
   calculatedKcal: number;
+  coachingFoods?: boolean;
 }
 
 export interface MealPlanMeal {

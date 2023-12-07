@@ -1,7 +1,7 @@
-import Link from "next/link";
+// import Link from "next/link";
 
-import { getServerAuthSession } from "~/server/auth";
-import { api } from "~/trpc/server";
+// import { getServerAuthSession } from "~/server/auth";
+// import { api } from "~/trpc/server";
 
 export default async function SignUp() {
   // const hello = await api.post.hello.query({ text: "from tRPC" });

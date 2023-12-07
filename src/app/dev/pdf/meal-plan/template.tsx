@@ -25,7 +25,7 @@ const meals: MealPlanMeal[] = [
         calculatedFat: 5,
         calculatedKcal: 100,
         calculatedProtein: 10,
-        coachingFoods: true,
+        unit: "g",
       },
       {
         amount: 50,
@@ -40,7 +40,7 @@ const meals: MealPlanMeal[] = [
         calculatedFat: 5,
         calculatedKcal: 100,
         calculatedProtein: 10,
-        coachingFoods: true,
+        unit: "ml",
       },
     ],
     id: "1",

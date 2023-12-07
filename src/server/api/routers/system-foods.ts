@@ -7,6 +7,7 @@ import {
   publicProcedure,
 } from "~/server/api/trpc";
 import { systemFoodLikes, systemFoods } from "~/server/db/schema";
+import { FoodUnits } from "~/types/_coaching/data/foods/system-foods";
 
 export const systemFoodsRouter = createTRPCRouter({
   likeStatus: protectedProcedure
@@ -65,7 +66,7 @@ export const systemFoodsRouter = createTRPCRouter({
       fat: number;
       kcal: number;
       amount: number;
-      unit: string;
+      unit: FoodUnits;
       liked: boolean | null;
       likeId: string | null;
     }[];

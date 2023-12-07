@@ -68,6 +68,7 @@ const FoodPicker: React.FC<{
                   fat={food.fat}
                   kcal={food.kcal}
                   liked={food.liked ?? false}
+                  unit={food.unit}
                   coachingFoods={true}
                   calculatedCarbs={food.carbs}
                   calculatedFat={food.fat}
@@ -91,6 +92,7 @@ const FoodPicker: React.FC<{
                   fat={food.fat}
                   kcal={food.kcal}
                   liked={food.liked ?? false}
+                  unit={food.unit}
                   coachingFoods={false}
                   calculatedCarbs={food.carbs}
                   calculatedFat={food.fat}
@@ -105,7 +107,7 @@ const FoodPicker: React.FC<{
 
 const FoodCard: React.FC<TransferFoodData> = ({
   id,
-  coachingFoods,
+  unit,
   amount,
   brand,
   carbs,
@@ -118,6 +120,7 @@ const FoodCard: React.FC<TransferFoodData> = ({
   calculatedFat,
   calculatedKcal,
   calculatedProtein,
+  coachingFoods,
 }) => {
   const handleDragStart = (e: React.DragEvent) => {
     setIsDragging(true);
@@ -126,7 +129,7 @@ const FoodCard: React.FC<TransferFoodData> = ({
       "food",
       JSON.stringify({
         id,
-        coachingFoods,
+        unit,
         brand,
         carbs,
         fat,

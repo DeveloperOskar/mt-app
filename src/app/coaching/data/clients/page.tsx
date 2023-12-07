@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Toaster } from "sonner";
 import CoachingClientTable from "~/app/_components/_coaching/data/clients/coaching-client-table";
 import DeleteClientDialog from "~/app/_components/_coaching/data/clients/delete-client-dialog";

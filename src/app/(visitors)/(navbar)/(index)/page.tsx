@@ -1,4 +1,4 @@
-import { Heart, Receipt, User } from "lucide-react";
+import { Heart, Receipt } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "~/app/_components/ui/button";
