@@ -30,13 +30,15 @@ export default async function SignIn() {
             </p>
           </div>
 
-          <SignInEmail />
+          {/*TODO IMPLEMENT MAGIC LINK*/}
 
-          <div className="flex items-center gap-3">
+          {/* <SignInEmail /> */}
+
+          {/* <div className="flex items-center gap-3">
             <Separator className="w-auto grow" />
             <p className="shrink text-sm text-gray-500">Eller med</p>
             <Separator className="w-auto grow" />
-          </div>
+          </div> */}
 
           <div className="flex flex-col gap-4">
             <SignInGoogle />
