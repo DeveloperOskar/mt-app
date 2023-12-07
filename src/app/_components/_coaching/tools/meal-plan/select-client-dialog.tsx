@@ -32,8 +32,6 @@ const SelectClientDialog = ({ clients }: { clients: GetCoachingClient[] }) => {
     selectClientDialog: { show },
   } = coachingMealPlanState$.get();
 
-  console.log(clients);
-
   return (
     <AlertDialog open={show}>
       <AlertDialogContent>
@@ -54,7 +52,13 @@ const SelectClientDialog = ({ clients }: { clients: GetCoachingClient[] }) => {
               >
                 <div className="flex items-center gap-2">
                   <Avatar>
-                    <AvatarFallback className="h-10 w-10">
+                    <AvatarFallback
+                      style={{
+                        backgroundColor: client.backgroundColor,
+                        color: client.textColor,
+                      }}
+                      className="h-10 w-10"
+                    >
                       {getInitials(client.name)}
                     </AvatarFallback>
                   </Avatar>

@@ -18,7 +18,6 @@ export const toggleAddEditFoodDialog = (
   show: boolean,
   food: GetCoachingFoods | null,
 ) => {
-  console.log("toggleAddEditFoodDialog", show, food);
   coachingFoodsState$.set((state) => ({
     ...state,
     addEditFoodDialog: {

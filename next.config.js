@@ -5,6 +5,16 @@
 await import("./src/env.js");
 
 /** @type {import("next").NextConfig} */
-const config = {};
+const config = {
+  rewrites: async () => {
+    return [
+      {
+        source: "/dev/pdf/meal-plan",
+        destination:
+          process.env.NODE_ENV === "production" ? "/404" : "/dev/pdf/meal-plan",
+      },
+    ];
+  },
+};
 
 export default config;

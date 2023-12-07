@@ -18,11 +18,15 @@ import {
 } from "~/app/_components/ui/menubar";
 import {
   addNewMeal,
+  calculateMealsTotal,
   coachingMealPlanState$,
   defaultState,
   deleteMeal,
 } from "~/app/_state/coaching/tools/meal-plan/coachingMealPlanState";
 import { enableReactTracking } from "@legendapp/state/config/enableReactTracking";
+import { saveAs } from "file-saver";
+import { pdf } from "@react-pdf/renderer";
+import MealPlanTemplate from "./meal-plan-template";
 
 enableReactTracking({
   auto: true,
@@ -30,6 +34,24 @@ enableReactTracking({
 
 const ActionBar = () => {
   const { meals } = coachingMealPlanState$.get();
+
+  const handleExportAsPdf = async () => {
+    const { totalCarbs, totalFat, totalKcal, totalProtein } =
+      calculateMealsTotal(meals);
+
+    const blob = await pdf(
+      <MealPlanTemplate
+        meals={meals}
+        totalCarbs={totalCarbs}
+        totalFat={totalFat}
+        totalKcal={totalKcal}
+        totalProtein={totalProtein}
+      />,
+    ).toBlob();
+
+    saveAs(blob, "meal-plan.pdf");
+  };
+
   return (
     <Menubar className="rounded-none border-t-0">
       <MenubarMenu>
@@ -75,7 +97,10 @@ const ActionBar = () => {
       <MenubarMenu>
         <MenubarTrigger>Exportera</MenubarTrigger>
         <MenubarContent>
-          <MenubarItem className="flex items-center justify-between">
+          <MenubarItem
+            onClick={handleExportAsPdf}
+            className="flex items-center justify-between"
+          >
             PDF <FileText className="h-4 w-4 text-gray-700" />
           </MenubarItem>
         </MenubarContent>

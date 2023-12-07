@@ -1,5 +1,6 @@
 import { observable } from "@legendapp/state";
 import { GetCoachingClient } from "~/types/_coaching/data/clients/coaching-clients";
+import { FoodUnits } from "~/types/_coaching/data/foods/system-foods";
 
 export interface TransferFoodData {
   id: number | string;
@@ -11,7 +12,7 @@ export interface TransferFoodData {
   fat: number;
   kcal: number;
   liked?: boolean;
-  coachingFoods: boolean;
+  unit: FoodUnits;
   calculatedProtein: number;
   calculatedCarbs: number;
   calculatedFat: number;
@@ -73,6 +74,22 @@ export const selectedClient = (
 export const coachingMealPlanState$ = observable<CoachingMealPlanState>({
   ...defaultState,
 });
+
+export const calculateMealsTotal = (meals: MealPlanMeal[]) => {
+  return meals.reduce(
+    (acc, meal) => {
+      return meal.foods.reduce((acc, food) => {
+        return {
+          totalProtein: acc.totalProtein + food.calculatedProtein,
+          totalCarbs: acc.totalCarbs + food.calculatedCarbs,
+          totalFat: acc.totalFat + food.calculatedFat,
+          totalKcal: acc.totalKcal + food.calculatedKcal,
+        };
+      }, acc);
+    },
+    { totalProtein: 0, totalCarbs: 0, totalFat: 0, totalKcal: 0 },
+  );
+};
 
 export const amountChanged = (
   meal: MealPlanMeal,

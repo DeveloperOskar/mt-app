@@ -120,7 +120,7 @@ const AddClientDialog = ({ form }: { form: Form }) => {
       textColor[1](AVATAR_BASE_TEXT_COLOR);
       background[1](AVATAR_BASE_BACKGROUND_COLOR);
     }
-  }, [client]);
+  }, [show]);
 
   const onSubmit = async (values: z.infer<typeof createClientSchema>) => {
     if (!client) {

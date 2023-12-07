@@ -107,17 +107,21 @@ const MealCard: React.FC<{ meal: MealPlanMeal }> = ({ meal }) => {
 
             <div className="text-sm">
               <p>Protein</p>
-              <p className="font-normal">{totalProtein.toFixed(1)} g</p>
+              <p className="font-normal">
+                {showDecimalIfNotZero(totalProtein)} g
+              </p>
             </div>
 
             <div className="text-sm">
               <p>Kolhydrater</p>
-              <p className="font-normal">{totalCarbs.toFixed(1)} g</p>
+              <p className="font-normal">
+                {showDecimalIfNotZero(totalCarbs)} g
+              </p>
             </div>
 
             <div className="text-sm">
               <p>Fett</p>
-              <p className="font-normal">{totalFat.toFixed(1)} g</p>
+              <p className="font-normal">{showDecimalIfNotZero(totalFat)} g</p>
             </div>
 
             <div className="text-sm">

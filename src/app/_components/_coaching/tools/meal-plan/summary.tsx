@@ -6,7 +6,10 @@ import { Avatar, AvatarFallback } from "~/app/_components/ui/avatar";
 import { Button } from "~/app/_components/ui/button";
 import { Card } from "~/app/_components/ui/card";
 import { getInitials, showDecimalIfNotZero } from "~/app/_lib/utils";
-import { coachingMealPlanState$ } from "~/app/_state/coaching/tools/meal-plan/coachingMealPlanState";
+import {
+  calculateMealsTotal,
+  coachingMealPlanState$,
+} from "~/app/_state/coaching/tools/meal-plan/coachingMealPlanState";
 import { GetCoachingClient } from "~/types/_coaching/data/clients/coaching-clients";
 
 enableReactTracking({
@@ -19,19 +22,9 @@ const Summary = () => {
     selectClientDialog: { selectedClient },
   } = coachingMealPlanState$.get();
 
-  const { totalProtein, totalCarbs, totalFat, totalKcal } = meals.reduce(
-    (acc, meal) => {
-      return meal.foods.reduce((acc, food) => {
-        return {
-          totalProtein: acc.totalProtein + food.calculatedProtein,
-          totalCarbs: acc.totalCarbs + food.calculatedCarbs,
-          totalFat: acc.totalFat + food.calculatedFat,
-          totalKcal: acc.totalKcal + food.calculatedKcal,
-        };
-      }, acc);
-    },
-    { totalProtein: 0, totalCarbs: 0, totalFat: 0, totalKcal: 0 },
-  );
+  const { totalProtein, totalCarbs, totalFat, totalKcal } =
+    calculateMealsTotal(meals);
+
   return (
     <Card className="rounded-md-none h-full basis-[380px] border-t-0 p-4">
       <Button
@@ -118,7 +111,13 @@ const ClientInfo = ({ client }: { client: GetCoachingClient }) => {
     <div className="mt-3 flex flex-col items-center justify-center gap-1 text-center">
       <p className="text-xs text-gray-700">Vald klient</p>
       <Avatar className="h-16 w-16 text-base">
-        <AvatarFallback className="font-semibold">
+        <AvatarFallback
+          style={{
+            backgroundColor: client.backgroundColor,
+            color: client.textColor,
+          }}
+          className="font-semibold"
+        >
           {getInitials(client.name)}
         </AvatarFallback>
       </Avatar>
