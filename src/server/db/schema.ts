@@ -162,9 +162,13 @@ export const coachingClients = mysqlTable(
     carbs: int("carbs").notNull(),
     fat: int("fat").notNull(),
     kcal: int("kcal").notNull(),
-    imageUrl: varchar("imageUrl", { length: 255 }).notNull().default(""),
-    imageKey: varchar("imageKey", { length: 255 }).notNull().default(""),
     userId: varchar("userId", { length: 255 }).notNull(),
+    textColor: varchar("textColor", { length: 255 })
+      .notNull()
+      .default("#000000"),
+    backgroundColor: varchar("backgroundColor", { length: 255 })
+      .notNull()
+      .default("#ffffff"),
     createdAt: timestamp("createdAt", { mode: "date" }).defaultNow().notNull(),
     updatedAt: timestamp("updatedAt", { mode: "date" }).defaultNow().notNull(),
   },

@@ -35,7 +35,6 @@ const DeleteClientDialog = () => {
 
     await deleteMutation.mutateAsync({
       id: client.id,
-      imageKey: client?.imageKey,
     });
     await utils.coachingFoods.get.invalidate();
     router.refresh();

@@ -111,10 +111,10 @@ const CoachingClientTable: React.FC<{
           <Table className="bg-white">
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup, index) => (
-                <TableRow key={headerGroup.id + +index}>
+                <TableRow key={headerGroup.id + index}>
                   {headerGroup.headers.map((header, index) => {
                     return (
-                      <TableHead key={(header.id, +index)}>
+                      <TableHead key={header.id + index}>
                         {header.isPlaceholder
                           ? null
                           : flexRender(

@@ -1,14 +1,8 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { Edit, MoreHorizontal, Star, Trash } from "lucide-react";
-import {
-  cn,
-  fromDbUnitToDisplayUnit,
-  hyphenEmptyString,
-} from "~/app/_lib/utils";
-import { api } from "~/trpc/react";
-import { useRouter } from "next/navigation";
+import { Edit, MoreHorizontal, Trash } from "lucide-react";
+import { getInitials, hyphenEmptyString } from "~/app/_lib/utils";
+
 import { Button } from "~/app/_components/ui/button";
-import { toast } from "sonner";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,15 +11,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "~/app/_components/ui/dropdown-menu";
-import { SetStateAction, useState } from "react";
 import { GetCoachingClient } from "~/types/_coaching/data/clients/coaching-clients";
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "~/app/_components/ui/avatar";
-import { NewEditClientDialog } from "./new-edit-client-dialog";
-import DeleteClientDialog from "./delete-client-dialog";
+import { Avatar, AvatarFallback } from "~/app/_components/ui/avatar";
 import {
   toggleAddEditClientDialog,
   toggleDeleteClientDialog,
@@ -41,14 +28,15 @@ export const coachingClientsColumns: ColumnDef<GetCoachingClient>[] = [
       return (
         <div>
           <Avatar className="">
-            <AvatarImage
-              className="h-full w-full object-cover"
-              src={
-                !row.original.imageUrl
-                  ? "/default_client.png"
-                  : row.original.imageUrl
-              }
-            />
+            <AvatarFallback
+              style={{
+                backgroundColor: row.original.backgroundColor,
+                color: row.original.textColor,
+              }}
+              className="h-10 w-10 font-semibold uppercase"
+            >
+              {getInitials(row.original.name)}
+            </AvatarFallback>
           </Avatar>
         </div>
       );
