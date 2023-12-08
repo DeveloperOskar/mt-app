@@ -4,43 +4,63 @@ import { showDecimalIfNotZero } from "~/app/_lib/utils";
 import { MealPlanMeal } from "~/app/_state/coaching/tools/meal-plan/coachingMealPlanState";
 
 const styles = StyleSheet.create({
-  mt24: {
-    marginTop: 32,
+  body: {
+    paddingHorizontal: 12,
+    paddingBottom: 24,
+    display: "flex",
+    flexDirection: "column",
+    gap: 16,
   },
+  metaDataWrapper: {
+    position: "absolute",
+    top: 12,
+    left: 12,
+  },
+
+  metaDataText: {
+    fontFamily: "Helvetica",
+    fontSize: 10,
+  },
+
+  documentContentWrapper: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 24,
+  },
+
+  mealsContentContainer: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 28,
+  },
+
   bold: {
     fontFamily: "Helvetica-Bold",
   },
-  body: {
-    paddingVertical: 24,
-  },
   header: {
     fontSize: 24,
-    paddingHorizontal: 12,
     fontFamily: "Helvetica-Bold",
   },
-  meal: {
+  mealSummaryHeader: {
     borderTop: "1px solid #E5E7EB",
     backgroundColor: "#F1F5F9",
-    paddingVertical: 12,
+    paddingVertical: 8,
     display: "flex",
     alignItems: "center",
-    gap: 8,
     flexDirection: "row",
-    justifyContent: "space-between",
     paddingHorizontal: 12,
   },
   mealName: {
-    fontSize: 16,
+    fontSize: 14,
     fontFamily: "Helvetica-Bold",
   },
-
   macroName: {
-    fontSize: 12,
+    fontSize: 10,
     fontFamily: "Helvetica-Bold",
   },
   macroAmount: {
     fontFamily: "Helvetica",
-    fontSize: 12,
+    fontSize: 10,
   },
   mealTotalWrapper: {
     display: "flex",
@@ -51,12 +71,12 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
-    paddingVertical: 10,
+    paddingVertical: 6,
     paddingHorizontal: 12,
   },
   mealFoodsHeader: {
     fontFamily: "Helvetica-Bold",
-    fontSize: 10,
+    fontSize: 8,
   },
   foodNameSize: {
     width: "25%",
@@ -69,38 +89,38 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
-    paddingVertical: 8,
+    paddingVertical: 4,
     paddingHorizontal: 12,
   },
   mealFoodRowData: {
     fontFamily: "Helvetica",
     fontSize: 10,
   },
-  totalMacroWrapper: {
-    fontSize: 12,
-    backgroundColor: "#F1F5F9",
-    width: 100,
-    height: 100,
+
+  totalsContainer: {
     display: "flex",
-    alignContent: "center",
-    justifyContent: "center",
-    textAlign: "center",
-    borderRadius: 99,
+    flexDirection: "column",
+    gap: 24,
   },
 
-  totalContainer: {
+  totalMacroWrapper: {
+    fontSize: 12,
+  },
+
+  totalsWrapper: {
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
-    gap: 16,
+    backgroundColor: "#F1F5F9",
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderBottom: "1px solid #E5E7EB",
+    borderTop: "1px solid #E5E7EB",
   },
 
   totalHeader: {
     fontFamily: "Helvetica-Bold",
-    marginBottom: 12,
-    textAlign: "center",
-    fontSize: 20,
+    fontSize: 16,
   },
 });
 
@@ -110,140 +130,246 @@ const MealPlanTemplate: React.FC<{
   totalFat: number;
   totalKcal: number;
   meals: MealPlanMeal[];
-}> = ({ totalCarbs, totalFat, totalKcal, totalProtein, meals }) => {
+  clientName?: string;
+  coachName?: string;
+  startDate?: string;
+  endDate?: string;
+}> = ({
+  totalCarbs,
+  totalFat,
+  totalKcal,
+  totalProtein,
+  meals,
+  clientName = "Kenneth eriksson",
+  coachName = "Oskar Eriksson",
+  endDate = " 2021-05-05",
+  startDate = " 2021-05-05",
+}) => {
+  const hasMetaData = coachName || clientName || startDate || endDate;
+
+  const calculatePaddingTop = () => {
+    let paddingTop = 0;
+
+    let basePadding = 36;
+
+    if (coachName) {
+      basePadding -= 7;
+      paddingTop += basePadding;
+    }
+    if (clientName) {
+      basePadding -= 7;
+      paddingTop += basePadding;
+    }
+    if (startDate) {
+      basePadding -= 7;
+      paddingTop += basePadding;
+    }
+    if (endDate) {
+      basePadding -= 7;
+      paddingTop += basePadding;
+    }
+
+    return paddingTop === 0 ? 36 : paddingTop;
+  };
+
   return (
     <Document>
-      <Page size={"A4"} style={styles.body}>
-        <Text style={styles.header}>Kostschema</Text>
+      <Page
+        size={"A4"}
+        style={[
+          styles.body,
+          {
+            paddingTop: calculatePaddingTop(),
+          },
+        ]}
+      >
+        <View style={styles.metaDataWrapper} fixed>
+          {coachName && (
+            <Text style={styles.metaDataText}>
+              <Text style={styles.bold}>Coach:</Text> {coachName}
+            </Text>
+          )}
 
-        {meals.length > 0 &&
-          meals.map((meal) => (
-            <React.Fragment key={meal.id}>
-              <View style={[styles.meal, styles.mt24]}>
-                <Text style={styles.mealName}>{meal.name}</Text>
+          {clientName && (
+            <Text style={styles.metaDataText}>
+              <Text style={styles.bold}>Till:</Text> {clientName}
+            </Text>
+          )}
 
-                <View style={styles.mealTotalWrapper}>
-                  <Text style={styles.macroName}>Kalorier</Text>
-                  <Text style={styles.macroAmount}>
-                    {showDecimalIfNotZero(
-                      meal.foods.reduce(
-                        (acc, food) => (acc += food.calculatedKcal),
-                        0,
-                      ),
-                    )}
-                  </Text>
-                </View>
+          {startDate && (
+            <Text style={styles.metaDataText}>
+              <Text style={styles.bold}>Startdatum:</Text> {startDate}
+            </Text>
+          )}
+          {endDate && (
+            <Text style={styles.metaDataText}>
+              <Text style={styles.bold}>Slutdatum:</Text> {endDate}
+            </Text>
+          )}
+        </View>
 
-                <View style={styles.mealTotalWrapper}>
-                  <Text style={styles.macroName}>Protein</Text>
-                  <Text style={styles.macroAmount}>
-                    {showDecimalIfNotZero(
-                      meal.foods.reduce(
-                        (acc, food) => (acc += food.calculatedProtein),
-                        0,
-                      ),
-                    )}{" "}
-                    g
-                  </Text>
-                </View>
+        <View style={styles.documentContentWrapper}>
+          <Text style={styles.header}>Kostschema</Text>
 
-                <View style={styles.mealTotalWrapper}>
-                  <Text style={styles.macroName}>Fett</Text>
-                  <Text style={styles.macroAmount}>
-                    {showDecimalIfNotZero(
-                      meal.foods.reduce(
-                        (acc, food) => (acc += food.calculatedFat),
-                        0,
-                      ),
-                    )}{" "}
-                    g
-                  </Text>
-                </View>
+          <View style={styles.mealsContentContainer} wrap={false}>
+            {meals.length > 0 &&
+              meals.map((meal) => (
+                <View key={meal.id}>
+                  {/* SUMMARY OF MEAL */}
 
-                <View style={styles.mealTotalWrapper}>
-                  <Text style={styles.macroName}>Kolhydrater</Text>
-                  <Text style={styles.macroAmount}>
-                    {showDecimalIfNotZero(
-                      meal.foods.reduce(
-                        (acc, food) => (acc += food.calculatedCarbs),
-                        0,
-                      ),
-                    )}{" "}
-                    g
-                  </Text>
-                </View>
-              </View>
-
-              <View style={styles.mealFoodsHeaderWrapper}>
-                <Text style={[styles.mealFoodsHeader, styles.foodNameSize]}>
-                  NAMN
-                </Text>
-                <Text style={[styles.mealFoodsHeader, styles.macroSize]}>
-                  MÄNGD
-                </Text>
-                <Text style={[styles.mealFoodsHeader, styles.macroSize]}>
-                  KALORIER
-                </Text>
-                <Text style={[styles.mealFoodsHeader, styles.macroSize]}>
-                  PROTEIN
-                </Text>
-                <Text style={[styles.mealFoodsHeader, styles.macroSize]}>
-                  FETT
-                </Text>
-                <Text style={[styles.mealFoodsHeader, styles.macroSize]}>
-                  KOLHYDRATER
-                </Text>
-              </View>
-
-              {meal.foods.length > 0 &&
-                meal.foods.map((food) => (
-                  <View style={styles.mealFoodsRowWrapper} key={food.id}>
-                    <Text style={[styles.mealFoodRowData, styles.foodNameSize]}>
-                      {food.name}
+                  <View style={[styles.mealSummaryHeader]}>
+                    <Text style={[styles.mealName, styles.foodNameSize]}>
+                      {meal.name}
                     </Text>
 
-                    <Text style={[styles.mealFoodRowData, styles.macroSize]}>
-                      {showDecimalIfNotZero(food.amount)}{" "}
-                      {food.unit !== "unit" ? food.unit : "st"}
+                    <Text style={[styles.macroSize, styles.macroName]}></Text>
+
+                    <View style={[styles.mealTotalWrapper, styles.macroSize]}>
+                      <Text style={styles.macroName}>Kalorier</Text>
+                      <Text style={styles.macroAmount}>
+                        {showDecimalIfNotZero(
+                          meal.foods.reduce(
+                            (acc, food) => (acc += food.calculatedKcal),
+                            0,
+                          ),
+                        )}
+                      </Text>
+                    </View>
+
+                    <View style={[styles.mealTotalWrapper, styles.macroSize]}>
+                      <Text style={styles.macroName}>Protein</Text>
+                      <Text style={styles.macroAmount}>
+                        {showDecimalIfNotZero(
+                          meal.foods.reduce(
+                            (acc, food) => (acc += food.calculatedProtein),
+                            0,
+                          ),
+                        )}{" "}
+                        g
+                      </Text>
+                    </View>
+
+                    <View style={[styles.mealTotalWrapper, styles.macroSize]}>
+                      <Text style={styles.macroName}>Fett</Text>
+                      <Text style={styles.macroAmount}>
+                        {showDecimalIfNotZero(
+                          meal.foods.reduce(
+                            (acc, food) => (acc += food.calculatedFat),
+                            0,
+                          ),
+                        )}{" "}
+                        g
+                      </Text>
+                    </View>
+
+                    <View style={[styles.mealTotalWrapper, styles.macroSize]}>
+                      <Text style={styles.macroName}>Kolhydrater</Text>
+                      <Text style={styles.macroAmount}>
+                        {showDecimalIfNotZero(
+                          meal.foods.reduce(
+                            (acc, food) => (acc += food.calculatedCarbs),
+                            0,
+                          ),
+                        )}{" "}
+                        g
+                      </Text>
+                    </View>
+                  </View>
+
+                  {/* MEAL HEADER */}
+
+                  <View style={styles.mealFoodsHeaderWrapper}>
+                    <Text style={[styles.mealFoodsHeader, styles.foodNameSize]}>
+                      NAMN
                     </Text>
-                    <Text style={[styles.mealFoodRowData, styles.macroSize]}>
-                      {showDecimalIfNotZero(food.calculatedKcal)} g
+                    <Text style={[styles.mealFoodsHeader, styles.macroSize]}>
+                      MÄNGD
                     </Text>
-                    <Text style={[styles.mealFoodRowData, styles.macroSize]}>
-                      {showDecimalIfNotZero(food.calculatedProtein)} g
+                    <Text style={[styles.mealFoodsHeader, styles.macroSize]}>
+                      KALORIER
                     </Text>
-                    <Text style={[styles.mealFoodRowData, styles.macroSize]}>
-                      {showDecimalIfNotZero(food.calculatedFat)} g
+                    <Text style={[styles.mealFoodsHeader, styles.macroSize]}>
+                      PROTEIN
                     </Text>
-                    <Text style={[styles.mealFoodRowData, styles.macroSize]}>
-                      {showDecimalIfNotZero(food.calculatedCarbs)} g
+                    <Text style={[styles.mealFoodsHeader, styles.macroSize]}>
+                      FETT
+                    </Text>
+                    <Text style={[styles.mealFoodsHeader, styles.macroSize]}>
+                      KOLHYDRATER
                     </Text>
                   </View>
-                ))}
-            </React.Fragment>
-          ))}
 
-        <Text style={[styles.totalHeader, styles.mt24]}>Totalt</Text>
+                  {/* MEAL FOODS */}
 
-        <View style={styles.totalContainer}>
-          <View style={styles.totalMacroWrapper}>
-            <Text style={styles.bold}>Protein</Text>
-            <Text>{totalProtein} g</Text>
+                  {meal.foods.length > 0 &&
+                    meal.foods.map((food) => (
+                      <View style={styles.mealFoodsRowWrapper} key={food.id}>
+                        <Text
+                          style={[styles.mealFoodRowData, styles.foodNameSize]}
+                        >
+                          {food.name}
+                        </Text>
+
+                        <Text
+                          style={[styles.mealFoodRowData, styles.macroSize]}
+                        >
+                          {showDecimalIfNotZero(food.amount)}{" "}
+                          {food.unit !== "unit" ? food.unit : "st"}
+                        </Text>
+                        <Text
+                          style={[styles.mealFoodRowData, styles.macroSize]}
+                        >
+                          {showDecimalIfNotZero(food.calculatedKcal)} g
+                        </Text>
+                        <Text
+                          style={[styles.mealFoodRowData, styles.macroSize]}
+                        >
+                          {showDecimalIfNotZero(food.calculatedProtein)} g
+                        </Text>
+                        <Text
+                          style={[styles.mealFoodRowData, styles.macroSize]}
+                        >
+                          {showDecimalIfNotZero(food.calculatedFat)} g
+                        </Text>
+                        <Text
+                          style={[styles.mealFoodRowData, styles.macroSize]}
+                        >
+                          {showDecimalIfNotZero(food.calculatedCarbs)} g
+                        </Text>
+                      </View>
+                    ))}
+                </View>
+              ))}
           </View>
 
-          <View style={styles.totalMacroWrapper}>
-            <Text style={styles.bold}>Kolhydrater</Text>
-            <Text>{totalCarbs} g</Text>
-          </View>
+          <View wrap={false} style={styles.totalsContainer}>
+            <View style={styles.totalsWrapper}>
+              <View style={[styles.macroSize, styles.foodNameSize]}>
+                <Text style={[styles.totalHeader]}>Totalt:</Text>
+              </View>
 
-          <View style={styles.totalMacroWrapper}>
-            <Text style={styles.bold}>Fett</Text>
-            <Text>{totalFat} g</Text>
-          </View>
+              <Text style={[styles.macroSize]}></Text>
 
-          <View style={styles.totalMacroWrapper}>
-            <Text style={styles.bold}>Kalorier</Text>
-            <Text>{totalKcal}</Text>
+              <View style={[styles.totalMacroWrapper, styles.macroSize]}>
+                <Text style={styles.bold}>Kalorier</Text>
+                <Text>{totalKcal}</Text>
+              </View>
+
+              <View style={[styles.totalMacroWrapper, styles.macroSize]}>
+                <Text style={[styles.bold]}>Protein</Text>
+                <Text>{totalProtein} g</Text>
+              </View>
+
+              <View style={[styles.totalMacroWrapper, styles.macroSize]}>
+                <Text style={styles.bold}>Fett</Text>
+                <Text>{totalFat} g</Text>
+              </View>
+
+              <View style={[styles.totalMacroWrapper, styles.macroSize]}>
+                <Text style={styles.bold}>Kolhydrater</Text>
+                <Text>{totalCarbs} g</Text>
+              </View>
+            </View>
           </View>
         </View>
       </Page>

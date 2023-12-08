@@ -191,31 +191,31 @@ const MacrosSummary = ({
 }) => {
   return (
     <>
-      <div className="mx-auto flex  w-full flex-col  rounded bg-accent px-4 py-2">
-        <p className="text-sm font-semibold text-gray-700">Kalorier</p>
+      <div className="mx-auto flex  w-full flex-col  rounded-none bg-accent px-4 py-2">
+        <p className="text-base font-semibold text-gray-700">Kalorier</p>
         <p className="text-sm">
           {totalKcal.toFixed(0)} {clientKcal && "/ " + clientKcal} kcal
         </p>
       </div>
 
-      <div className="mx-auto  flex  w-full flex-col  rounded bg-accent px-4 py-2">
-        <p className="text-sm font-semibold text-gray-700">Protein</p>
+      <div className="mx-auto  flex  w-full flex-col   rounded-none bg-accent px-4 py-2">
+        <p className="text-base font-semibold text-gray-700">Protein</p>
         <p className="text-sm">
           {showDecimalIfNotZero(totalProtein)}{" "}
           {clientProtein && "/ " + clientProtein} g
         </p>
       </div>
 
-      <div className="mx-auto flex  w-full flex-col  rounded bg-accent px-4 py-2">
-        <p className="text-sm font-semibold text-gray-700">Kolhydrater</p>
+      <div className="mx-auto flex  w-full flex-col   rounded-none bg-accent px-4 py-2">
+        <p className="text-base font-semibold text-gray-700">Kolhydrater</p>
         <p className="text-sm">
           {showDecimalIfNotZero(totalCarbs)} {clientCarbs && "/ " + clientCarbs}{" "}
           g
         </p>
       </div>
 
-      <div className="mx-auto   flex  w-full flex-col  rounded bg-accent px-4 py-2">
-        <p className="text-sm font-semibold text-gray-700">Fett</p>
+      <div className="mx-auto   flex  w-full flex-col   rounded-none bg-accent px-4 py-2">
+        <p className="text-base font-semibold text-gray-700">Fett</p>
         <p className="text-sm">
           {showDecimalIfNotZero(totalFat)} {clientFat && "/ " + clientFat}g
         </p>

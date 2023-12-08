@@ -2,8 +2,10 @@ import React from "react";
 import SingleScreenWrapper from "~/app/_components/_coaching/single-screen-wrapper";
 import Content from "~/app/_components/_coaching/tools/meal-plan/content";
 import FoodPicker from "~/app/_components/_coaching/tools/meal-plan/food-picker";
+import LoadingState from "~/app/_components/_coaching/tools/meal-plan/loading-state";
 import SelectClientDialog from "~/app/_components/_coaching/tools/meal-plan/select-client-dialog";
 import Summary from "~/app/_components/_coaching/tools/meal-plan/summary";
+import { Card } from "~/app/_components/ui/card";
 import { api } from "~/trpc/server";
 
 const MealPlan = async () => {
