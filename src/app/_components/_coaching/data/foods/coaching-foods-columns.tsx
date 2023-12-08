@@ -4,6 +4,7 @@ import {
   cn,
   fromDbUnitToDisplayUnit,
   hyphenEmptyString,
+  showDecimalIfNotZero,
 } from "~/app/_lib/utils";
 import { api } from "~/trpc/react";
 import { useRouter } from "next/navigation";
@@ -98,27 +99,37 @@ export const coachingFoodColumns: ColumnDef<GetCoachingFoods>[] = [
   {
     accessorKey: "amount",
     header: "Mängd",
-    cell: ({ row }) => <div>{row.getValue("amount")}</div>,
+    cell: ({ row }) => (
+      <div>{showDecimalIfNotZero(+(row.getValue("amount") as string))}</div>
+    ),
   },
   {
     accessorKey: "protein",
     header: "Protein",
-    cell: ({ row }) => <div>{row.getValue("protein")}g</div>,
+    cell: ({ row }) => (
+      <div>{showDecimalIfNotZero(+(row.getValue("protein") as string))} g</div>
+    ),
   },
   {
     accessorKey: "carbs",
     header: "Kolhydrater",
-    cell: ({ row }) => <div>{row.getValue("carbs")}g</div>,
+    cell: ({ row }) => (
+      <div>{showDecimalIfNotZero(+(row.getValue("carbs") as string))} g</div>
+    ),
   },
   {
     accessorKey: "fat",
     header: "Fett",
-    cell: ({ row }) => <div>{row.getValue("fat")}g</div>,
+    cell: ({ row }) => (
+      <div>{showDecimalIfNotZero(+(row.getValue("fat") as string))} g</div>
+    ),
   },
   {
     accessorKey: "kcal",
     header: "Kalorier",
-    cell: ({ row }) => <div>{row.getValue("kcal")} kcal</div>,
+    cell: ({ row }) => (
+      <div>{showDecimalIfNotZero(+(row.getValue("kcal") as string))} kcal</div>
+    ),
   },
   {
     id: "actions",

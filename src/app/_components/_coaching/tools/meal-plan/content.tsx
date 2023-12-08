@@ -242,12 +242,14 @@ const MealCard: React.FC<{ meal: MealPlanMeal }> = ({ meal }) => {
                       <td className="py-3 pl-3 text-xs">{food.name}</td>
                       <td className="pr-3">
                         <Input
+                          step={food.unit === "unit" ? 0.1 : 1}
                           onChange={(e) =>
                             amountChanged(
                               meal,
                               food,
                               foodIndex,
                               e.target.valueAsNumber ?? 0,
+                              food.unit,
                             )
                           }
                           value={food.amount}

@@ -11,19 +11,35 @@ import { createFoodSchema } from "~/types/_coaching/data/foods/coaching-foods";
 
 export const coachingFoodsRouter = createTRPCRouter({
   get: protectedProcedure.query(async ({ ctx }) => {
-    return await ctx.db
+    const result = await ctx.db
       .select()
       .from(coachingFoods)
       .where(eq(coachingFoods.userId, ctx.session.user.id))
       .orderBy(desc(coachingFoods.liked), coachingFoods.name);
+
+    return result.map((food) => ({
+      ...food,
+      amount: parseFloat(food.amount),
+      protein: parseFloat(food.protein),
+      carbs: parseFloat(food.carbs),
+      fat: parseFloat(food.fat),
+      kcal: parseFloat(food.kcal),
+    }));
   }),
 
   create: protectedProcedure
     .input(createFoodSchema)
     .mutation(async ({ ctx, input }) => {
-      await ctx.db
-        .insert(coachingFoods)
-        .values({ ...input, userId: ctx.session.user.id, liked: false });
+      await ctx.db.insert(coachingFoods).values({
+        ...input,
+        amount: input.amount + "",
+        protein: input.protein + "",
+        carbs: input.carbs + "",
+        fat: input.fat + "",
+        kcal: input.kcal + "",
+        userId: ctx.session.user.id,
+        liked: false,
+      });
     }),
 
   delete: protectedProcedure
@@ -41,6 +57,11 @@ export const coachingFoodsRouter = createTRPCRouter({
         .update(coachingFoods)
         .set({
           ...input,
+          protein: input.protein + "",
+          carbs: input.carbs + "",
+          fat: input.fat + "",
+          kcal: input.kcal + "",
+          amount: input.amount + "",
         })
         .where(eq(coachingFoods.id, input.id));
     }),

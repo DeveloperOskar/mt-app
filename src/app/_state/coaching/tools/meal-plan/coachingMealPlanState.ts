@@ -111,42 +111,76 @@ export const amountChanged = (
   food: TransferFoodData,
   foodIndex: number,
   amount: number,
+  unit: FoodUnits,
 ) => {
-  const protein = food.protein / 100;
-  const carbs = food.carbs / 100;
-  const fat = food.fat / 100;
-  const kcal = food.kcal / 100;
+  if (unit !== "unit") {
+    const protein = food.protein / 100;
+    const carbs = food.carbs / 100;
+    const fat = food.fat / 100;
+    const kcal = food.kcal / 100;
 
-  const calculatedProtein = protein * amount;
-  const calculatedCarbs = carbs * amount;
-  const calculatedFat = fat * amount;
-  const calculatedKcal = kcal * amount;
+    const calculatedProtein = protein * amount;
+    const calculatedCarbs = carbs * amount;
+    const calculatedFat = fat * amount;
+    const calculatedKcal = kcal * amount;
 
-  coachingMealPlanState$.set((state) => ({
-    ...state,
+    coachingMealPlanState$.set((state) => ({
+      ...state,
 
-    meals: state.meals.map((m) => {
-      if (m.id === meal.id) {
-        return {
-          ...m,
-          foods: m.foods.map((f, i) => {
-            if (f.id === food.id && foodIndex === i) {
-              return {
-                ...f,
-                amount,
-                calculatedProtein,
-                calculatedCarbs,
-                calculatedFat,
-                calculatedKcal,
-              };
-            }
-            return f;
-          }),
-        };
-      }
-      return m;
-    }),
-  }));
+      meals: state.meals.map((m) => {
+        if (m.id === meal.id) {
+          return {
+            ...m,
+            foods: m.foods.map((f, i) => {
+              if (f.id === food.id && foodIndex === i) {
+                return {
+                  ...f,
+                  amount,
+                  calculatedProtein,
+                  calculatedCarbs,
+                  calculatedFat,
+                  calculatedKcal,
+                };
+              }
+              return f;
+            }),
+          };
+        }
+        return m;
+      }),
+    }));
+  } else {
+    const calculatedProtein = food.protein * amount;
+    const calculatedCarbs = food.carbs * amount;
+    const calculatedFat = food.fat * amount;
+    const calculatedKcal = food.kcal * amount;
+
+    coachingMealPlanState$.set((state) => ({
+      ...state,
+
+      meals: state.meals.map((m) => {
+        if (m.id === meal.id) {
+          return {
+            ...m,
+            foods: m.foods.map((f, i) => {
+              if (f.id === food.id && foodIndex === i) {
+                return {
+                  ...f,
+                  amount,
+                  calculatedProtein,
+                  calculatedCarbs,
+                  calculatedFat,
+                  calculatedKcal,
+                };
+              }
+              return f;
+            }),
+          };
+        }
+        return m;
+      }),
+    }));
+  }
 };
 
 export const addNewMeal = (meal: MealPlanMeal) => {

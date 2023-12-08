@@ -368,22 +368,22 @@ const MealPlanTemplate: React.FC<{
 
               <View style={[styles.totalMacroWrapper, styles.macroSize]}>
                 <Text style={styles.bold}>Kalorier</Text>
-                <Text>{totalKcal}</Text>
+                <Text>{showDecimalIfNotZero(totalKcal, 0)}</Text>
               </View>
 
               <View style={[styles.totalMacroWrapper, styles.macroSize]}>
                 <Text style={[styles.bold]}>Protein</Text>
-                <Text>{totalProtein} g</Text>
+                <Text>{showDecimalIfNotZero(totalProtein, 0)} g</Text>
               </View>
 
               <View style={[styles.totalMacroWrapper, styles.macroSize]}>
                 <Text style={styles.bold}>Fett</Text>
-                <Text>{totalFat} g</Text>
+                <Text>{showDecimalIfNotZero(totalFat, 0)} g</Text>
               </View>
 
               <View style={[styles.totalMacroWrapper, styles.macroSize]}>
                 <Text style={styles.bold}>Kolhydrater</Text>
-                <Text>{totalCarbs} g</Text>
+                <Text>{showDecimalIfNotZero(totalCarbs, 0)} g</Text>
               </View>
             </View>
           </View>

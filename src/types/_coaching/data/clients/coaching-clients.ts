@@ -10,8 +10,8 @@ export const foodNumberSchema = z
   .max(10000, {
     message: "Mängden får vara max 10000.",
   })
-  .step(0.1, {
-    message: "Max 1 decimal.",
+  .step(1, {
+    message: "Inga decimaler tillåtet.",
   })
   .default(0);
 

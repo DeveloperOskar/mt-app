@@ -7,18 +7,13 @@ import {
   text,
   timestamp,
   varchar,
+  decimal,
   boolean,
   serial,
 } from "drizzle-orm/mysql-core";
 import { type AdapterAccount } from "next-auth/adapters";
 import { FoodUnits } from "~/types/_coaching/data/foods/system-foods";
 
-/**
- * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
- * database instance for multiple projects.
- *
- * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
- */
 export const mysqlTable = mysqlTableCreator((name) => `mt-app_${name}`);
 
 export const users = mysqlTable("user", {
@@ -135,11 +130,11 @@ export const coachingFoods = mysqlTable(
       .default("g")
       .notNull()
       .$type<FoodUnits>(),
-    amount: int("amount").notNull(),
-    protein: int("protein").notNull(),
-    carbs: int("carbs").notNull(),
-    fat: int("fat").notNull(),
-    kcal: int("kcal").notNull(),
+    amount: decimal("amount", { precision: 6, scale: 1 }).notNull(),
+    protein: decimal("protein", { precision: 6, scale: 1 }).notNull(),
+    carbs: decimal("carbs", { precision: 6, scale: 1 }).notNull(),
+    fat: decimal("fat", { precision: 6, scale: 1 }).notNull(),
+    kcal: decimal("kcal", { precision: 6, scale: 1 }).notNull(),
     liked: boolean("liked").default(false),
     userId: varchar("userId", { length: 255 }).notNull(),
     createdAt: timestamp("createdAt", { mode: "date" }).defaultNow().notNull(),
