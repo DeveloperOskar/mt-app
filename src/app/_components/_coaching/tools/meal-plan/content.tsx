@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import ActionBar from "./action-bar";
 import { Card } from "~/app/_components/ui/card";
 import {
@@ -22,14 +22,22 @@ import { Button } from "~/app/_components/ui/button";
 import { Textarea } from "~/app/_components/ui/textarea";
 import { Label } from "~/app/_components/ui/label";
 import { Input } from "~/app/_components/ui/input";
-import { coachingFoodsState$ } from "~/app/_state/coaching/data/foods/coahcingFoodsState";
 
 enableReactTracking({
   auto: true,
+  warnUnobserved: true,
 });
 
-const Content = () => {
+const Content = ({ userName }: { userName: string }) => {
   const { meals } = coachingMealPlanState$.get();
+
+  useEffect(() => {
+    coachingMealPlanState$.set((state) => ({
+      ...state,
+      userName,
+    }));
+  }, []);
+
   return (
     <div className="flex basis-[700px] flex-col border-t-0 ">
       <ActionBar />
@@ -225,6 +233,7 @@ const MealCard: React.FC<{ meal: MealPlanMeal }> = ({ meal }) => {
                 {meal.foods.length > 0 &&
                   meal.foods.map((food, foodIndex) => (
                     <tr
+                      key={food.id}
                       className={cn(
                         "border-t",
                         foodIndex === meal.foods.length - 1 && "border-b",

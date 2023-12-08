@@ -33,6 +33,10 @@ export interface CoachingMealPlanState {
     selectedClient: undefined | GetCoachingClient;
   };
   meals: MealPlanMeal[];
+  startDate: string;
+  endDate: string;
+  includeAuthor: boolean;
+  userName: string;
 }
 
 export const defaultState: CoachingMealPlanState = {
@@ -40,7 +44,10 @@ export const defaultState: CoachingMealPlanState = {
     show: false,
     selectedClient: undefined,
   },
-
+  endDate: "",
+  startDate: "",
+  includeAuthor: false,
+  userName: "",
   meals: [
     {
       name: "Måltid 1",
@@ -75,6 +82,13 @@ export const selectedClient = (
 export const coachingMealPlanState$ = observable<CoachingMealPlanState>({
   ...defaultState,
 });
+
+export const updateDate = (date: string, type: "start" | "end") => {
+  coachingMealPlanState$.set((state) => ({
+    ...state,
+    [`${type}Date`]: date,
+  }));
+};
 
 export const calculateMealsTotal = (meals: MealPlanMeal[]) => {
   return meals.reduce(

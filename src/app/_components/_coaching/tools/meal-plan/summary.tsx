@@ -2,7 +2,7 @@
 
 import { enableReactTracking } from "@legendapp/state/config/enableReactTracking";
 import { CalendarIcon } from "lucide-react";
-import React from "react";
+import React, { useEffect } from "react";
 import { Avatar, AvatarFallback } from "~/app/_components/ui/avatar";
 import { Button } from "~/app/_components/ui/button";
 import { Calendar } from "~/app/_components/ui/calendar";
@@ -16,6 +16,7 @@ import { cn, getInitials, showDecimalIfNotZero } from "~/app/_lib/utils";
 import {
   calculateMealsTotal,
   coachingMealPlanState$,
+  updateDate,
 } from "~/app/_state/coaching/tools/meal-plan/coachingMealPlanState";
 import { GetCoachingClient } from "~/types/_coaching/data/clients/coaching-clients";
 import { format } from "date-fns";
@@ -30,6 +31,9 @@ enableReactTracking({
 const Summary = () => {
   const {
     meals,
+    startDate,
+    includeAuthor,
+    endDate,
     selectClientDialog: { selectedClient },
   } = coachingMealPlanState$.get();
 
@@ -41,17 +45,34 @@ const Summary = () => {
       <div className="flex flex-col gap-3  px-4">
         <Label>
           <span className="mb-1 block">Startdatum</span>
-          <DatePicker label={"Välj startdatum"} />
+          <DatePicker
+            dateInState={startDate}
+            dateType="start"
+            label={"Välj startdatum"}
+          />
         </Label>
 
         <Label>
           <span className="mb-1 block">Slutdatum </span>
-          <DatePicker label={"Välj slutdatum"} />
+          <DatePicker
+            dateInState={endDate}
+            dateType="end"
+            label={"Välj slutdatum"}
+          />
         </Label>
       </div>
 
       <div className="flex items-center space-x-2 px-4">
-        <Checkbox id="terms2" />
+        <Checkbox
+          checked={includeAuthor}
+          onCheckedChange={(checked) => {
+            coachingMealPlanState$.set((state) => ({
+              ...state,
+              includeAuthor: (checked.valueOf() as boolean) ?? false.valueOf(),
+            }));
+          }}
+          id="terms2"
+        />
         <label
           htmlFor="terms2"
           className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
@@ -113,8 +134,18 @@ const Summary = () => {
   );
 };
 
-const DatePicker: React.FC<{ label: string }> = ({ label }) => {
-  const [date, setDate] = React.useState<Date>();
+const DatePicker: React.FC<{
+  label: string;
+  dateType: "start" | "end";
+  dateInState: string;
+}> = ({ label, dateType, dateInState = "" }) => {
+  const [date, setDate] = React.useState<Date | undefined>(undefined);
+
+  useEffect(() => {
+    if (!dateInState) {
+      setDate(undefined);
+    }
+  }, [dateInState]);
 
   return (
     <Popover>
@@ -140,7 +171,15 @@ const DatePicker: React.FC<{ label: string }> = ({ label }) => {
         <Calendar
           mode="single"
           selected={date}
-          onSelect={setDate}
+          onSelect={(d) => {
+            setDate(d);
+            updateDate(
+              format(d as Date, "PPP", {
+                locale: sv,
+              }),
+              dateType,
+            );
+          }}
           initialFocus
         />
       </PopoverContent>
@@ -169,7 +208,6 @@ const ClientInfo = ({ client }: { client: GetCoachingClient }) => {
     </div>
   );
 };
-
 const MacrosSummary = ({
   totalCarbs,
   totalFat,

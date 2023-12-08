@@ -1,8 +1,7 @@
 "use client";
 
-import { Eraser, FileText, Plus, PlusCircle } from "lucide-react";
+import { Eraser, FileText, PlusCircle } from "lucide-react";
 import { v4 as uuidv4 } from "uuid";
-
 import React from "react";
 import {
   Menubar,
@@ -10,7 +9,6 @@ import {
   MenubarItem,
   MenubarMenu,
   MenubarSeparator,
-  MenubarShortcut,
   MenubarSub,
   MenubarSubContent,
   MenubarSubTrigger,
@@ -33,7 +31,14 @@ enableReactTracking({
 });
 
 const ActionBar = () => {
-  const { meals } = coachingMealPlanState$.get();
+  const {
+    meals,
+    selectClientDialog,
+    endDate,
+    startDate,
+    includeAuthor,
+    userName,
+  } = coachingMealPlanState$.get();
 
   const handleExportAsPdf = async () => {
     const { totalCarbs, totalFat, totalKcal, totalProtein } =
@@ -46,6 +51,10 @@ const ActionBar = () => {
         totalFat={totalFat}
         totalKcal={totalKcal}
         totalProtein={totalProtein}
+        clientName={selectClientDialog?.selectedClient?.name ?? ""}
+        coachName={includeAuthor ? userName : ""}
+        startDate={startDate}
+        endDate={endDate}
       />,
     ).toBlob();
 

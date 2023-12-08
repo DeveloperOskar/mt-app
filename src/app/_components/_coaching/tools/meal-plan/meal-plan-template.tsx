@@ -97,6 +97,15 @@ const styles = StyleSheet.create({
     fontSize: 10,
   },
 
+  descriptionWrapper: {
+    paddingTop: 8,
+  },
+
+  description: {
+    fontSize: 10,
+    paddingHorizontal: 12,
+  },
+
   totalsContainer: {
     display: "flex",
     flexDirection: "column",
@@ -140,13 +149,11 @@ const MealPlanTemplate: React.FC<{
   totalKcal,
   totalProtein,
   meals,
-  clientName = "Kenneth eriksson",
-  coachName = "Oskar Eriksson",
-  endDate = " 2021-05-05",
-  startDate = " 2021-05-05",
+  clientName,
+  coachName,
+  endDate,
+  startDate,
 }) => {
-  const hasMetaData = coachName || clientName || startDate || endDate;
-
   const calculatePaddingTop = () => {
     let paddingTop = 0;
 
@@ -338,6 +345,15 @@ const MealPlanTemplate: React.FC<{
                         </Text>
                       </View>
                     ))}
+
+                  {meal.description && (
+                    <View style={styles.descriptionWrapper}>
+                      <Text style={[styles.description, styles.bold]}>
+                        Beskrining
+                      </Text>
+                      <Text style={styles.description}>{meal.description}</Text>
+                    </View>
+                  )}
                 </View>
               ))}
           </View>

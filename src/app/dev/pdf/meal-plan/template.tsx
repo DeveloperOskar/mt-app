@@ -194,7 +194,7 @@ const meals: MealPlanMeal[] = [
     name: "Måltid 3",
   },
   {
-    description: "Måltid 4 beskrivning",
+    description: "",
     foods: [
       {
         amount: 50,
