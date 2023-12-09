@@ -8,8 +8,8 @@ const VisitorNavbar = async () => {
   const session = await getServerAuthSession();
 
   return (
-    <nav className="flex items-center justify-between gap-6 border-b bg-white px-3 py-3">
-      <div className="flex items-center gap-5">
+    <nav className="sticky top-0 flex items-center  justify-between gap-6 border-b bg-white px-3 py-3">
+      <div className="flex items-center gap-8">
         <div className="flex items-center gap-2">
           <Image
             src={"/mt-nav-logo-xxs.png"}

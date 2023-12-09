@@ -6,8 +6,6 @@ import { redirect } from "next/navigation";
 import SignInGoogle from "~/app/_components/_visitors/sign-in-google";
 import { Button } from "~/app/_components/ui/button";
 import { ArrowLeft } from "lucide-react";
-import { Separator } from "~/app/_components/ui/separator";
-import SignInEmail from "~/app/_components/_visitors/sign-in-email";
 
 export default async function SignIn() {
   const session = await getServerAuthSession();
@@ -17,7 +15,7 @@ export default async function SignIn() {
   }
 
   return (
-    <main className="container mx-auto flex h-full ">
+    <main className="container mx-auto flex h-[100vh] ">
       <section className="flex grow items-center">
         <div className="flex w-[400px] flex-col gap-8  rounded-md bg-white p-6 shadow-md">
           <div>

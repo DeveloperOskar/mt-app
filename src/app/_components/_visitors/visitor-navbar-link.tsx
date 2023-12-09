@@ -10,18 +10,12 @@ export const NavLink = ({ href, text }: { text: string; href: string }) => {
     <li>
       <Link
         className={cn(
-          "group relative font-semibold hover:text-black",
-          href === pathname ? " text-black" : "text-black/60",
+          "group relative text-base font-semibold underline-offset-2 hover:text-black hover:underline",
+          href === pathname ? " text-black underline " : "text-black/70",
         )}
         href={href}
       >
         <span>{text}</span>
-        <div
-          className={cn(
-            "absolute left-0 top-[42px] h-[2px] w-full transition-all duration-100 group-hover:bg-black",
-            href === pathname ? "bg-black" : "bg-transparent",
-          )}
-        ></div>
       </Link>
     </li>
   );

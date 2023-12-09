@@ -13,6 +13,7 @@ import {
 } from "~/app/_components/ui/dropdown-menu";
 import { ArrowLeft, LogOut, User } from "lucide-react";
 import { signOut } from "next-auth/react";
+import Link from "next/link";
 
 const CoachingNavbarAvatar = ({
   image,
@@ -39,14 +40,18 @@ const CoachingNavbarAvatar = ({
           <User className="mr-2 h-4 w-4" />
           <span>Profil</span>
         </DropdownMenuItem>
+
         <DropdownMenuItem>
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          <span>Lämna applikationen</span>
+          <Link href={"/"} className="flex items-center">
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            <span>Lämna applikationen</span>
+          </Link>
         </DropdownMenuItem>
 
         <DropdownMenuSeparator />
 
         <DropdownMenuItem
+          className="cursor-pointer"
           onClick={() =>
             signOut({
               callbackUrl: "/",
