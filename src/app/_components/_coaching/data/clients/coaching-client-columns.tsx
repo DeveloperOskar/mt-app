@@ -1,6 +1,18 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { Edit, MoreHorizontal, Trash } from "lucide-react";
-import { getInitials, hyphenEmptyString } from "~/app/_lib/utils";
+import {
+  ChevronDown,
+  ChevronUp,
+  Edit,
+  ListPlus,
+  MoreHorizontal,
+  Percent,
+  Trash,
+} from "lucide-react";
+import {
+  getInitials,
+  hyphenEmptyString,
+  showDecimalIfNotZero,
+} from "~/app/_lib/utils";
 
 import { Button } from "~/app/_components/ui/button";
 import {
@@ -17,6 +29,7 @@ import {
   toggleAddEditClientDialog,
   toggleDeleteClientDialog,
 } from "~/app/_state/coaching/data/clients/coachingClientsState";
+import { useState } from "react";
 
 export const coachingClientsColumns: ColumnDef<GetCoachingClient>[] = [
   {
@@ -26,7 +39,11 @@ export const coachingClientsColumns: ColumnDef<GetCoachingClient>[] = [
 
     cell: ({ row }) => {
       return (
-        <div>
+        <div
+          onClick={() => {
+            row.toggleExpanded(!row.getIsExpanded());
+          }}
+        >
           <Avatar className="">
             <AvatarFallback
               style={{
@@ -42,35 +59,117 @@ export const coachingClientsColumns: ColumnDef<GetCoachingClient>[] = [
       );
     },
   },
+
+  {
+    accessorKey: "weightIns",
+    header: "Vikt",
+    cell: ({ row }) => (
+      <div
+        onClick={() => {
+          row.toggleExpanded(!row.getIsExpanded());
+        }}
+      >
+        {row.original.weightIns[row.original.weightIns.length - 1]?.value ??
+          "-"}{" "}
+        kg
+      </div>
+    ),
+  },
+  {
+    accessorKey: "fatPercentages",
+    header: "Fettprocent",
+    cell: ({ row }) => (
+      <div
+        onClick={() => {
+          row.toggleExpanded(!row.getIsExpanded());
+        }}
+      >
+        {showDecimalIfNotZero(
+          row.original.fatPercentages[row.original.fatPercentages.length - 1]
+            ?.value ?? 0,
+        )}{" "}
+        %
+      </div>
+    ),
+  },
   {
     accessorKey: "name",
     header: "Namn",
-    cell: ({ row }) => <div>{row.getValue("name")}</div>,
+    cell: ({ row }) => (
+      <div
+        onClick={() => {
+          row.toggleExpanded(!row.getIsExpanded());
+        }}
+      >
+        {row.getValue("name")}
+      </div>
+    ),
   },
+
   {
     accessorKey: "email",
     header: "Email",
-    cell: ({ row }) => <div>{hyphenEmptyString(row.getValue("email"))}</div>,
+    cell: ({ row }) => (
+      <div
+        onClick={() => {
+          row.toggleExpanded(!row.getIsExpanded());
+        }}
+      >
+        {hyphenEmptyString(row.getValue("email"))}
+      </div>
+    ),
   },
   {
     accessorKey: "protein",
     header: "Protein",
-    cell: ({ row }) => <div>{row.getValue("protein")}g</div>,
+    cell: ({ row }) => (
+      <div
+        onClick={() => {
+          row.toggleExpanded(!row.getIsExpanded());
+        }}
+      >
+        {row.getValue("protein")}g
+      </div>
+    ),
   },
   {
     accessorKey: "carbs",
     header: "Kolhydrater",
-    cell: ({ row }) => <div>{row.getValue("carbs")}g</div>,
+    cell: ({ row }) => (
+      <div
+        onClick={() => {
+          row.toggleExpanded(!row.getIsExpanded());
+        }}
+      >
+        {row.getValue("carbs")}g
+      </div>
+    ),
   },
   {
     accessorKey: "fat",
     header: "Fett",
-    cell: ({ row }) => <div>{row.getValue("fat")}g</div>,
+    cell: ({ row }) => (
+      <div
+        onClick={() => {
+          row.toggleExpanded(!row.getIsExpanded());
+        }}
+      >
+        {row.getValue("fat")}g
+      </div>
+    ),
   },
   {
     accessorKey: "kcal",
     header: "Kalorier",
-    cell: ({ row }) => <div>{row.getValue("kcal")} kcal</div>,
+    cell: ({ row }) => (
+      <div
+        onClick={() => {
+          row.toggleExpanded(!row.getIsExpanded());
+        }}
+      >
+        {row.getValue("kcal")} kcal
+      </div>
+    ),
   },
   {
     id: "actions",

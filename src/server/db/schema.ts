@@ -10,6 +10,7 @@ import {
   decimal,
   boolean,
   serial,
+  json,
 } from "drizzle-orm/mysql-core";
 import { type AdapterAccount } from "next-auth/adapters";
 import { FoodUnits } from "~/types/_coaching/data/foods/system-foods";
@@ -157,6 +158,12 @@ export const coachingClients = mysqlTable(
     carbs: int("carbs").notNull(),
     fat: int("fat").notNull(),
     kcal: int("kcal").notNull(),
+    weightIns: json("weightIns")
+      .$type<{ date: string; value: number }[]>()
+      .notNull(),
+    fatPercentages: json("fatPercentages")
+      .$type<{ date: string; value: number }[]>()
+      .notNull(),
     userId: varchar("userId", { length: 255 }).notNull(),
     textColor: varchar("textColor", { length: 255 })
       .notNull()

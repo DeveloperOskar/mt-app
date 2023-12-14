@@ -34,6 +34,24 @@ export const createClientSchema = z.object({
     .default(""),
   textColor: z.string().default("#272E3F"),
   backgroundColor: z.string().default("#F1F5F9"),
+  weight: z
+    .number()
+    .max(1000, {
+      message: "Vikten får vara max 1000 kg.",
+    })
+    .step(0.01, {
+      message: "Max 2 decimaler tilåtet.",
+    })
+    .default(0),
+  fatPercentage: z
+    .number()
+    .max(100, {
+      message: "Får max vara 100.",
+    })
+    .step(0.01, {
+      message: "Max 2 decimaler tilåtet.",
+    })
+    .default(0),
   protein: foodNumberSchema,
   carbs: foodNumberSchema,
   fat: foodNumberSchema,

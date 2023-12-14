@@ -50,6 +50,8 @@ type Form = UseFormReturn<
     kcal: number;
     textColor: string;
     backgroundColor: string;
+    weight: number;
+    fatPercentage: number;
   },
   any,
   undefined
@@ -71,6 +73,8 @@ export const NewEditClientDialog = () => {
       carbs: 0,
       fat: 0,
       kcal: 0,
+      weight: 0,
+      fatPercentage: 0,
       backgroundColor: "#F1F5F9",
       textColor: "#272E3F",
     },
@@ -78,12 +82,15 @@ export const NewEditClientDialog = () => {
 
   useEffect(() => {
     if (client) {
+      console.log(client);
       form.setValue("name", client.name);
       form.setValue("email", client.email);
       form.setValue("protein", client.protein);
       form.setValue("carbs", client.carbs);
       form.setValue("fat", client.fat);
       form.setValue("kcal", client.kcal);
+      form.setValue("weight", client.weightIns[0]?.value ?? 0);
+      form.setValue("fatPercentage", client.fatPercentages[0]?.value ?? 0);
     }
   }, [client]);
 
@@ -150,9 +157,12 @@ const AddClientDialog = ({ form }: { form: Form }) => {
 
   const createClient = async (values: z.infer<typeof createClientSchema>) => {
     await createMutation.mutateAsync({
-      ...values,
-      textColor: textColor[0],
-      backgroundColor: background[0],
+      client: {
+        ...values,
+        textColor: textColor[0],
+        backgroundColor: background[0],
+      },
+      createdDate: new Date(),
     });
     await utils.coachingClients.invalidate();
     toast.success(`${values.name} har sparats`);
@@ -208,6 +218,53 @@ const AddClientDialog = ({ form }: { form: Form }) => {
                 </FormItem>
               )}
             />
+            <FormField
+              control={form.control}
+              name="weight"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Vikt vid start (kg)</FormLabel>
+                  <FormControl>
+                    <Input
+                      step={0.01}
+                      type="number"
+                      placeholder=""
+                      {...field}
+                      onChange={(event) => {
+                        field.onChange(
+                          +event.target.value !== 0 ? +event.target.value : "",
+                        );
+                      }}
+                    />
+                  </FormControl>
+                  <FormDescription>Klientens startvikt.</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="fatPercentage"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Fettprocent vid start (%)</FormLabel>
+                  <FormControl>
+                    <Input
+                      step={0.01}
+                      type="number"
+                      placeholder=""
+                      {...field}
+                      onChange={(event) => {
+                        field.onChange(+event.target.valueAsNumber);
+                      }}
+                    />
+                  </FormControl>
+                  <FormDescription>Klientens fettprocent.</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             <FormField
               control={form.control}
               name="protein"
