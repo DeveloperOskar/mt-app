@@ -20,19 +20,19 @@ const CoachingSubNavLink = ({
   return (
     <Link
       className={cn(
-        "group relative  hover:text-black",
-        href === pathname ? " text-black" : "text-black/60",
+        "group relative  font-semibold underline-offset-2 hover:text-black  hover:underline",
+        href === pathname ? " text-black underline" : "text-black/60",
       )}
       href={href}
     >
       <span>{text}</span>
 
-      <div
+      {/* <div
         className={cn(
           "absolute left-0 top-[35px] h-[2px] w-full transition-all duration-100 group-hover:bg-black",
           href === pathname ? "bg-black" : "bg-transparent",
         )}
-      ></div>
+      ></div> */}
     </Link>
   );
 };

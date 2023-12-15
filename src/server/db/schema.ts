@@ -13,6 +13,7 @@ import {
   json,
 } from "drizzle-orm/mysql-core";
 import { type AdapterAccount } from "next-auth/adapters";
+import { ClientGoal } from "~/types/_coaching/data/clients/coaching-clients";
 import { FoodUnits } from "~/types/_coaching/data/foods/system-foods";
 
 export const mysqlTable = mysqlTableCreator((name) => `mt-app_${name}`);
@@ -171,6 +172,10 @@ export const coachingClients = mysqlTable(
     backgroundColor: varchar("backgroundColor", { length: 255 })
       .notNull()
       .default("#ffffff"),
+    goal: varchar("goal", { length: 255 })
+      .notNull()
+      .default("maintain")
+      .$type<ClientGoal>(),
     createdAt: timestamp("createdAt", { mode: "date" }).defaultNow().notNull(),
     updatedAt: timestamp("updatedAt", { mode: "date" }).defaultNow().notNull(),
   },

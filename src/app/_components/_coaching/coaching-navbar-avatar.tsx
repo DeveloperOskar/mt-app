@@ -17,10 +17,12 @@ import Link from "next/link";
 
 const CoachingNavbarAvatar = ({
   image,
-  name,
+  initials,
+  fullName,
 }: {
   image: string;
-  name: string;
+  initials: string;
+  fullName: string;
 }) => {
   return (
     <DropdownMenu>
@@ -28,13 +30,13 @@ const CoachingNavbarAvatar = ({
         <Avatar className="cursor-pointer border-2">
           <AvatarImage className="h-full w-full object-cover" src={image} />
           <AvatarFallback className="bg-black font-semibold text-white">
-            {name}
+            {initials}
           </AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
 
       <DropdownMenuContent className="mr-4 min-w-[200px]">
-        <DropdownMenuLabel>Mitt konto</DropdownMenuLabel>
+        <DropdownMenuLabel>{fullName}</DropdownMenuLabel>
 
         <DropdownMenuItem>
           <User className="mr-2 h-4 w-4" />

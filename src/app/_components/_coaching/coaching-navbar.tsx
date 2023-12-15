@@ -4,6 +4,8 @@ import { CoachingNavLink } from "./coaching-navbar-link";
 import { getInitials } from "~/app/_lib/utils";
 import { getServerAuthSession } from "~/server/auth";
 import CoachingNavbarAvatar from "./coaching-navbar-avatar";
+import { Button } from "../ui/button";
+import { HelpCircle } from "lucide-react";
 
 const CoachingNavbar = async () => {
   const session = await getServerAuthSession();
@@ -44,10 +46,17 @@ const CoachingNavbar = async () => {
         </ul>
       </div>
 
-      <CoachingNavbarAvatar
-        image={session?.user?.image ?? ""}
-        name={getInitials(session?.user?.name ?? "")}
-      />
+      <div className="flex items-center gap-4">
+        <Button variant={"ghost"} size={"icon"}>
+          <HelpCircle className="h-5 w-5 text-gray-800" />
+        </Button>
+
+        <CoachingNavbarAvatar
+          image={session?.user?.image ?? ""}
+          initials={getInitials(session?.user?.name ?? "")}
+          fullName={session?.user?.name ?? "Mitt konto"}
+        />
+      </div>
     </nav>
   );
 };

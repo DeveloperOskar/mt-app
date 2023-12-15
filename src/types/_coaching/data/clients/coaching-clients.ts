@@ -2,6 +2,8 @@ import type { inferRouterOutputs } from "@trpc/server";
 import type { AppRouter } from "~/server/api/root";
 import { z } from "zod";
 
+export type ClientGoal = "gain" | "lose" | "maintain";
+
 export const foodNumberSchema = z
   .number({
     invalid_type_error: "Måste ha ett värde.",
@@ -52,6 +54,9 @@ export const createClientSchema = z.object({
       message: "Max 2 decimaler tilåtet.",
     })
     .default(0),
+  goal: z
+    .union([z.literal("gain"), z.literal("lose"), z.literal("maintain")])
+    .default("maintain"),
   protein: foodNumberSchema,
   carbs: foodNumberSchema,
   fat: foodNumberSchema,

@@ -1,12 +1,11 @@
 import { ColumnDef } from "@tanstack/react-table";
 import {
-  ChevronDown,
-  ChevronUp,
   Edit,
-  ListPlus,
   MoreHorizontal,
-  Percent,
+  Scale,
   Trash,
+  TrendingDown,
+  TrendingUp,
 } from "lucide-react";
 import {
   getInitials,
@@ -29,13 +28,12 @@ import {
   toggleAddEditClientDialog,
   toggleDeleteClientDialog,
 } from "~/app/_state/coaching/data/clients/coachingClientsState";
-import { useState } from "react";
+import { Badge } from "~/app/_components/ui/badge";
 
 export const coachingClientsColumns: ColumnDef<GetCoachingClient>[] = [
   {
-    accessorKey: "imageUrl",
+    id: "avatar",
     enableHiding: false,
-    header: "",
 
     cell: ({ row }) => {
       return (
@@ -61,54 +59,18 @@ export const coachingClientsColumns: ColumnDef<GetCoachingClient>[] = [
   },
 
   {
-    accessorKey: "weightIns",
-    header: "Vikt",
-    cell: ({ row }) => (
-      <div
-        onClick={() => {
-          row.toggleExpanded(!row.getIsExpanded());
-        }}
-      >
-        {row.original.weightIns[row.original.weightIns.length - 1]?.value ??
-          "-"}{" "}
-        kg
-      </div>
-    ),
-  },
-  {
-    accessorKey: "fatPercentages",
-    header: "Fettprocent",
-    cell: ({ row }) => (
-      <div
-        onClick={() => {
-          row.toggleExpanded(!row.getIsExpanded());
-        }}
-      >
-        {showDecimalIfNotZero(
-          row.original.fatPercentages[row.original.fatPercentages.length - 1]
-            ?.value ?? 0,
-        )}{" "}
-        %
-      </div>
-    ),
-  },
-  {
     accessorKey: "name",
     header: "Namn",
+    id: "name",
     cell: ({ row }) => (
-      <div
-        onClick={() => {
-          row.toggleExpanded(!row.getIsExpanded());
-        }}
-      >
-        {row.getValue("name")}
-      </div>
+      <div className=" capitalize">{row.getValue("name")}</div>
     ),
   },
 
   {
     accessorKey: "email",
     header: "Email",
+    id: "email",
     cell: ({ row }) => (
       <div
         onClick={() => {
@@ -119,6 +81,75 @@ export const coachingClientsColumns: ColumnDef<GetCoachingClient>[] = [
       </div>
     ),
   },
+
+  {
+    enableHiding: true,
+    id: "goal",
+    header: "Mål",
+    cell: ({ row }) => {
+      return (
+        <div>
+          {row.original.goal === "lose" && (
+            <Badge
+              variant={"outline"}
+              className="flex w-fit items-center gap-2"
+            >
+              <span>Gå ner i vikt</span>{" "}
+              <TrendingDown className="h-4 w-5 text-gray-900" />
+            </Badge>
+          )}
+
+          {row.original.goal === "gain" && (
+            <Badge
+              variant={"outline"}
+              className="flex w-fit items-center gap-2"
+            >
+              <span>Gå upp i vikt</span>{" "}
+              <TrendingUp className="h-4 w-5 text-gray-900" />
+            </Badge>
+          )}
+
+          {row.original.goal === "maintain" && (
+            <Badge
+              variant={"outline"}
+              className="flex w-fit items-center gap-2"
+            >
+              <span>Behålla vikt</span>{" "}
+              <Scale className="h-4 w-5 text-gray-900" />
+            </Badge>
+          )}
+        </div>
+      );
+    },
+  },
+
+  {
+    accessorKey: "weightIns",
+    header: "Vikt",
+    id: "weight",
+    cell: ({ row }) => (
+      <div>
+        {row.original.weightIns[row.original.weightIns.length - 1]?.value ??
+          "-"}{" "}
+        kg
+      </div>
+    ),
+  },
+  {
+    accessorKey: "fatPercentages",
+    header: "Fettprocent",
+    id: "fatPercentages",
+    cell: ({ row }) => (
+      <div>
+        {showDecimalIfNotZero(
+          row.original.fatPercentages[row.original.fatPercentages.length - 1]
+            ?.value ?? 0,
+        )}{" "}
+        %
+      </div>
+    ),
+  },
+
   {
     accessorKey: "protein",
     header: "Protein",
@@ -128,7 +159,7 @@ export const coachingClientsColumns: ColumnDef<GetCoachingClient>[] = [
           row.toggleExpanded(!row.getIsExpanded());
         }}
       >
-        {row.getValue("protein")}g
+        {row.getValue("protein")} g
       </div>
     ),
   },
@@ -141,7 +172,7 @@ export const coachingClientsColumns: ColumnDef<GetCoachingClient>[] = [
           row.toggleExpanded(!row.getIsExpanded());
         }}
       >
-        {row.getValue("carbs")}g
+        {row.getValue("carbs")} g
       </div>
     ),
   },
@@ -154,7 +185,7 @@ export const coachingClientsColumns: ColumnDef<GetCoachingClient>[] = [
           row.toggleExpanded(!row.getIsExpanded());
         }}
       >
-        {row.getValue("fat")}g
+        {row.getValue("fat")} g
       </div>
     ),
   },

@@ -21,7 +21,10 @@ import {
 } from "~/app/_components/ui/form";
 import { Input } from "~/app/_components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createClientSchema } from "~/types/_coaching/data/clients/coaching-clients";
+import {
+  ClientGoal,
+  createClientSchema,
+} from "~/types/_coaching/data/clients/coaching-clients";
 import { Button } from "~/app/_components/ui/button";
 import { Avatar } from "~/app/_components/ui/avatar";
 import { AvatarImage } from "@radix-ui/react-avatar";
@@ -39,6 +42,13 @@ import {
   AVATAR_BASE_TEXT_COLOR,
   AvatarColorPicker,
 } from "~/app/_components/ui/avatar-color-picker";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/app/_components/ui/select";
 
 type Form = UseFormReturn<
   {
@@ -52,6 +62,7 @@ type Form = UseFormReturn<
     backgroundColor: string;
     weight: number;
     fatPercentage: number;
+    goal: ClientGoal;
   },
   any,
   undefined
@@ -77,6 +88,7 @@ export const NewEditClientDialog = () => {
       fatPercentage: 0,
       backgroundColor: "#F1F5F9",
       textColor: "#272E3F",
+      goal: "maintain",
     },
   });
 
@@ -91,6 +103,7 @@ export const NewEditClientDialog = () => {
       form.setValue("kcal", client.kcal);
       form.setValue("weight", client.weightIns[0]?.value ?? 0);
       form.setValue("fatPercentage", client.fatPercentages[0]?.value ?? 0);
+      form.setValue("goal", client.goal);
     }
   }, [client]);
 
@@ -223,7 +236,7 @@ const AddClientDialog = ({ form }: { form: Form }) => {
               name="weight"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Vikt vid start (kg)</FormLabel>
+                  <FormLabel>Kroppsvikt vid start (kg)</FormLabel>
                   <FormControl>
                     <Input
                       step={0.01}
@@ -242,6 +255,37 @@ const AddClientDialog = ({ form }: { form: Form }) => {
                 </FormItem>
               )}
             />
+
+            <FormField
+              control={form.control}
+              name="goal"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Mål *</FormLabel>
+
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                    value={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                    </FormControl>
+
+                    <SelectContent>
+                      <SelectItem value="maintain">Behålla vikt</SelectItem>
+                      <SelectItem value="gain">Gå upp i vikt</SelectItem>
+                      <SelectItem value="lose">Gå ner i vikt</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormDescription>Klientens mål.</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             <FormField
               control={form.control}
               name="fatPercentage"
@@ -259,7 +303,9 @@ const AddClientDialog = ({ form }: { form: Form }) => {
                       }}
                     />
                   </FormControl>
-                  <FormDescription>Klientens fettprocent.</FormDescription>
+                  <FormDescription>
+                    Klientens fettprocent vid start.
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -367,6 +413,9 @@ const AddClientDialog = ({ form }: { form: Form }) => {
                 </FormItem>
               )}
             />
+          </div>
+
+          <div className="mt-4">
             <FormField
               control={form.control}
               name="kcal"

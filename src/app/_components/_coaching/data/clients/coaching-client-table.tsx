@@ -35,6 +35,7 @@ import {
 import { toggleAddEditClientDialog } from "~/app/_state/coaching/data/clients/coachingClientsState";
 import { api } from "~/trpc/react";
 import { toast } from "sonner";
+import { cn } from "~/app/_lib/utils";
 
 const CoachingClientTable: React.FC<{
   coachingClients: GetCoachingClient[];
@@ -120,7 +121,18 @@ const CoachingClientTable: React.FC<{
                 <TableRow key={headerGroup.id + index}>
                   {headerGroup.headers.map((header, index) => {
                     return (
-                      <TableHead key={header.id + index}>
+                      <TableHead
+                        className={cn(
+                          "",
+                          header.column.columnDef.id === "avatar" && "w-[90px]",
+                          header.column.columnDef.id === "name" && "w-[180px] ",
+                          header.column.columnDef.id === "goal" &&
+                            "w-[170px]  ",
+                          header.column.columnDef.id === "email" &&
+                            "w-[280px] ",
+                        )}
+                        key={header.id + index}
+                      >
                         {header.isPlaceholder
                           ? null
                           : flexRender(
@@ -137,22 +149,20 @@ const CoachingClientTable: React.FC<{
             <TableBody>
               {table.getRowModel().rows?.length ? (
                 table.getRowModel().rows.map((row, index) => (
-                  <>
-                    <TableRow
-                      className=" cursor-pointer"
-                      key={row.id + index}
-                      data-state={row.getIsSelected() && "selected"}
-                    >
-                      {row.getVisibleCells().map((cell, index) => (
-                        <TableCell key={cell.id + index} className="py-3">
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext(),
-                          )}
-                        </TableCell>
-                      ))}
-                    </TableRow>
-                  </>
+                  <TableRow
+                    className=" cursor-pointer"
+                    key={row.id + index}
+                    data-state={row.getIsSelected() && "selected"}
+                  >
+                    {row.getVisibleCells().map((cell, index) => (
+                      <TableCell key={cell.id + index} className="py-3">
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext(),
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
                 ))
               ) : (
                 <TableRow>

@@ -37,23 +37,23 @@ export function AvatarColorPicker({
       <PopoverTrigger asChild>
         <Button
           variant={"ghost"}
-          className={cn("relative mx-auto flex h-16 w-16 flex-col")}
+          className={cn("relative mx-auto flex h-20 w-20 flex-col")}
         >
           <Avatar>
             <AvatarFallback
-              className=" flex h-16 w-16 items-center justify-center rounded-full text-lg font-semibold uppercase"
+              className=" flex h-20 w-20 items-center justify-center rounded-full text-lg font-semibold uppercase"
               style={{
                 backgroundColor: bg,
                 color: color,
               }}
             >
-              <span>{name ? getInitials(name) : "MT"}</span>
+              <span>{name ? getInitials(name) : ""}</span>
             </AvatarFallback>
           </Avatar>
           <Pipette className="absolute bottom-0 right-[-10px] h-4 w-4" />
 
           {!name && (
-            <span className="absolute bottom-[-25px] text-xs font-semibold italic">
+            <span className="absolute bottom-[-25px] text-xs ">
               Ange ett namn för att se initialerna
             </span>
           )}

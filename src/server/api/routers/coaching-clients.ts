@@ -49,7 +49,8 @@ export const coachingClientsRouter = createTRPCRouter({
         ${coachingClients.textColor},
         ${coachingClients.weightIns},
         ${coachingClients.fatPercentages},
-        ${coachingClients.userId}
+        ${coachingClients.userId},
+        ${coachingClients.goal}
         ) VALUES (
           ${input.client.name},
           ${input.client.email},
@@ -71,7 +72,8 @@ export const coachingClientsRouter = createTRPCRouter({
               value: showDecimalIfNotZero(input.client.fatPercentage, 2),
             },
           ])},
-          ${ctx.session.user.id}
+          ${ctx.session.user.id},
+          ${input.client.goal}
         )
       `);
     }),
