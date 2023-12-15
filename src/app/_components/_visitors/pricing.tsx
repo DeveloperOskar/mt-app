@@ -14,29 +14,16 @@ import { Check } from "lucide-react";
 
 function Pricing() {
   return (
-    <section className="container mx-auto flex h-screen flex-col  border-x  px-0">
-      <div className="flex w-full flex-col items-center border-b pb-14 pt-14">
-        <Badge className="text-sm" variant="default">
-          Priser
-        </Badge>
-
-        <h1 className=" mt-4 text-center text-6xl font-bold">
-          Priser efter dina behov
-        </h1>
+    <section className="container mx-auto  min-h-[calc(100vh-70px)] py-24">
+      <div className="flex  flex-col gap-2">
+        <Badge className="w-fit text-lg">Priser</Badge>
+        <h1 className="text-6xl font-bold">Priser efter dina behov</h1>
       </div>
 
-      <div className="grid h-full grid-cols-3">
-        <div className="h-full border-r px-6 pb-14 pt-10">
-          <PriceCard title={"Gratis"} price={"0"} />
-        </div>
-
-        <div className="h-full border-r px-6 pb-14 pt-10">
-          <PriceCard title={"Gratis"} price={"0"} />
-        </div>
-
-        <div className="h-full px-6 pb-14 pt-10">
-          <PriceCard title={"Gratis"} price={"0"} />
-        </div>
+      <div className="mt-14 grid grid-cols-3 gap-12">
+        <PriceCard title={"Gratis"} price={"0"} />
+        <PriceCard title={"Basic"} price={"149"} />
+        <PriceCard title={"Proffset"} price={"299"} />
       </div>
     </section>
   );

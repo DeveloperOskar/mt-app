@@ -3,49 +3,63 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "~/app/_components/ui/button";
 import { Card } from "~/app/_components/ui/card";
+import { Badge } from "../ui/badge";
+import { Check } from "lucide-react";
 
 const Hero = () => {
   return (
-    <section className="container mx-auto flex flex-col items-center border-x px-0 py-14">
-      <div className="w-full border-b pb-12">
-        <h1 className="text-center text-7xl font-bold">
-          Ta din coaching till <br />
-          <span className="underline">nästa</span> nivå
-        </h1>
+    <section className="container mx-auto grid  min-h-[calc(100vh-70px)]  grid-cols-[1fr_700px] items-center gap-14">
+      <div>
+        <div className="flex  flex-col gap-2">
+          <Badge className="w-fit text-lg">MyTeam</Badge>
+          <h1 className="text-6xl font-bold">
+            Ta din coaching till<br></br> nästa nivå
+          </h1>
+          <p className="text-xl text-card-foreground">
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+            Asperiores, nisi id minima, ab minus repellendus ducimus magnam
+            laudantium iure rerum. Lorem ipsum dolor sit amet, consectetur
+            adipisicing elit. Asperiores, nisi id minima, ab minus repellendus
+            ducimus magnam laudantium iure rerum.
+          </p>
+        </div>
 
-        <p className="mx-auto  block max-w-[950px] py-8 text-center text-2xl text-card-foreground">
-          Maximera din framgång som coach med MyTeams webbaserade gränssnitt.
-          Öka din inkomst och överträffa dina konkurrenter med den senaste
-          tekniken. Ta din coaching till nästa nivå och låt oss hjälpa dig att
-          nå nya höjder!
-        </p>
+        <ul className="flex flex-col gap-1 py-10">
+          <li className="flex items-center gap-4 ">
+            <Check className="h-5 w-5" />
 
-        <div className="mx-auto flex  items-center justify-center gap-4">
-          <Link href={"/information"}>
-            <Button className="text-base" variant={"outline"} size={"lg"}>
-              Lär dig mer
-            </Button>
-          </Link>
+            <span className="text-lg font-semibold ">Öka dina intekter</span>
+          </li>
+          <li className="flex items-center gap-4">
+            <Check className="h-5 w-5" />
+            <span className="text-lg font-semibold">Hälp fler</span>
+          </li>
+          <li className="flex items-center gap-4">
+            <Check className="h-5 w-5" />
 
-          <Link href={"/sign-up"}>
-            <Button className="text-base" size={"lg"}>
-              Gå med nu
-            </Button>
-          </Link>
+            <span className="text-lg font-semibold ">Arbeta mer effektivt</span>
+          </li>
+        </ul>
+
+        <div className="flex items-center gap-2">
+          <Button className="text-lg" size={"lg"}>
+            Gå med
+          </Button>
+
+          <Button className="text-lg" size={"lg"} variant={"outline"}>
+            Läs mer
+          </Button>
         </div>
       </div>
 
-      <div className="px-6 pt-12">
-        <Card className=" rounded-lg shadow-none ">
-          <Image
-            priority={true}
-            className="h-full w-auto rounded-lg  object-cover"
-            src={"/hero-img-min.png"}
-            alt="a image of my team create food"
-            width={1916}
-            height={945}
-          />
-        </Card>
+      <div>
+        <Image
+          alt="Rend.ai Image"
+          className="mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center sm:w-full lg:order-last"
+          height="550"
+          src="https://generated.vusercontent.net/placeholder.svg"
+          width="310"
+        />
       </div>
     </section>
   );

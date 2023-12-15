@@ -1,123 +1,117 @@
 import React from "react";
 import { Badge } from "../ui/badge";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
+import { Button } from "../ui/button";
 import { Check } from "lucide-react";
 
 const SellingPoints = () => {
   return (
-    <div className="bg-slate-50">
-      <section className="container flex h-screen border-x border-b border-t px-0">
-        <div className="flex h-full shrink basis-[800px] flex-col justify-between border-r px-12 py-14">
-          <div>
-            <Badge className="text-sm" variant="default">
-              Funktioner
-            </Badge>
-
-            <h2 className=" mt-4 pb-14 text-5xl font-bold">Allt du behöver</h2>
+    <div className="h-[calc(100vh-70px)] bg-slate-50 py-24 ">
+      <section className="container grid h-full grid-cols-[1fr_700px]">
+        <div className="flex  h-full flex-col justify-between ">
+          <div className="flex  flex-col gap-2">
+            <Badge className="w-fit text-lg">Funktioner</Badge>
+            <h1 className="text-6xl font-bold">Allt du behöver</h1>
           </div>
 
-          <div>
-            <h2 className=" mt-4 pb-14 text-5xl font-bold">Och mycket mer</h2>
+          <div className="flex flex-col gap-8">
+            <h2 className="text-6xl font-bold">Och mycket mer</h2>
+            <Button size={"lg"} className="w-fit text-lg">
+              Alla funktioner
+            </Button>
           </div>
         </div>
 
-        <div className="h-full grow">
-          <ul className="grid h-full grid-cols-2 grid-rows-4">
-            <li className=" flex flex-col gap-4 border-b border-r p-6">
-              <div className="flex items-center gap-3">
-                <Check />
-                <p className="font-semibold">Lorem ipsum</p>
-              </div>
+        <div className="flex flex-col justify-between ">
+          <Card>
+            <CardHeader>
+              <CardTitle>Klienter</CardTitle>
+              <CardDescription>
+                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nisi,
+                consequatur ab. Voluptate laboriosam asperiores placeat dolor
+                atque praesentium! Laboriosam eveniet officiis
+              </CardDescription>
+            </CardHeader>
 
-              <p className=" text-card-foreground">
-                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ipsum,
-                eius itaque. Numquam dolores necessitatibus cum.{" "}
-              </p>
-            </li>
+            <CardContent>
+              <ul>
+                <li className="flex items-center gap-2">
+                  <Check className="text-green-500" />{" "}
+                  <span className="font-semibold">Något feature 1</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check className="text-green-500" />{" "}
+                  <span className="font-semibold">Något feature 2</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check className="text-green-500" />{" "}
+                  <span className="font-semibold">Något feature 3</span>
+                </li>
+              </ul>
+            </CardContent>
+          </Card>
 
-            <li className=" flex flex-col gap-4 border-b p-6">
-              <div className="flex items-center gap-3">
-                <Check />
-                <p className="font-semibold">Lorem ipsum</p>
-              </div>
+          <Card>
+            <CardHeader>
+              <CardTitle>Kostschema</CardTitle>
+              <CardDescription>
+                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nisi,
+                consequatur ab. Voluptate laboriosam asperiores placeat dolor
+                atque praesentium! Laboriosam eveniet officiis
+              </CardDescription>
+            </CardHeader>
 
-              <p className=" text-card-foreground">
-                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ipsum,
-                eius itaque. Numquam dolores necessitatibus cum.{" "}
-              </p>
-            </li>
+            <CardContent>
+              <ul>
+                <li className="flex items-center gap-2">
+                  <Check className="text-green-500" />{" "}
+                  <span className="font-semibold">Något feature 1</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check className="text-green-500" />{" "}
+                  <span className="font-semibold">Något feature 2</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check className="text-green-500" />{" "}
+                  <span className="font-semibold">Något feature 3</span>
+                </li>
+              </ul>
+            </CardContent>
+          </Card>
 
-            <li className=" flex flex-col gap-4 border-b border-r p-6">
-              <div className="flex items-center gap-3">
-                <Check />
-                <p className="font-semibold">Lorem ipsum</p>
-              </div>
+          <Card>
+            <CardHeader>
+              <CardTitle>Träningscheman</CardTitle>
+              <CardDescription>
+                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nisi,
+                consequatur ab. Voluptate laboriosam asperiores placeat dolor
+                atque praesentium! Laboriosam eveniet officiis
+              </CardDescription>
+            </CardHeader>
 
-              <p className=" text-card-foreground">
-                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ipsum,
-                eius itaque. Numquam dolores necessitatibus cum.{" "}
-              </p>
-            </li>
-
-            <li className=" flex flex-col gap-4 border-b p-6">
-              <div className="flex items-center gap-3">
-                <Check />
-                <p className="font-semibold">Lorem ipsum</p>
-              </div>
-
-              <p className=" text-card-foreground">
-                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ipsum,
-                eius itaque. Numquam dolores necessitatibus cum.{" "}
-              </p>
-            </li>
-
-            <li className=" flex flex-col gap-4 border-b border-r p-6">
-              <div className="flex items-center gap-3">
-                <Check />
-                <p className="font-semibold">Lorem ipsum</p>
-              </div>
-
-              <p className=" text-card-foreground">
-                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ipsum,
-                eius itaque. Numquam dolores necessitatibus cum.{" "}
-              </p>
-            </li>
-
-            <li className=" flex flex-col gap-4 border-b p-6">
-              <div className="flex items-center gap-3">
-                <Check />
-                <p className="font-semibold">Lorem ipsum</p>
-              </div>
-
-              <p className=" text-card-foreground">
-                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ipsum,
-                eius itaque. Numquam dolores necessitatibus cum.{" "}
-              </p>
-            </li>
-
-            <li className=" flex flex-col gap-4  border-r p-6">
-              <div className="flex items-center gap-3">
-                <Check />
-                <p className="font-semibold">Lorem ipsum</p>
-              </div>
-
-              <p className=" text-card-foreground">
-                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ipsum,
-                eius itaque. Numquam dolores necessitatibus cum.{" "}
-              </p>
-            </li>
-
-            <li className=" flex flex-col gap-4  p-6">
-              <div className="flex items-center gap-3">
-                <Check />
-                <p className="font-semibold">Lorem ipsum</p>
-              </div>
-
-              <p className=" text-card-foreground">
-                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ipsum,
-                eius itaque. Numquam dolores necessitatibus cum.{" "}
-              </p>
-            </li>
-          </ul>
+            <CardContent>
+              <ul>
+                <li className="flex items-center gap-2">
+                  <Check className="text-green-500" />{" "}
+                  <span className="font-semibold">Något feature 1</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check className="text-green-500" />{" "}
+                  <span className="font-semibold">Något feature 2</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check className="text-green-500" />{" "}
+                  <span className="font-semibold">Något feature 3</span>
+                </li>
+              </ul>
+            </CardContent>
+          </Card>
         </div>
       </section>
     </div>
