@@ -3,6 +3,7 @@ import { Toaster } from "sonner";
 import CoachingClientTable from "~/app/_components/_coaching/data/clients/coaching-client-table";
 import DeleteClientDialog from "~/app/_components/_coaching/data/clients/delete-client-dialog";
 import { NewEditClientDialog } from "~/app/_components/_coaching/data/clients/new-edit-client-dialog";
+import RegisterWeightFatPercentageDialog from "~/app/_components/_coaching/data/clients/register-weight-fatpercentage-dialog";
 import SingleScreenWrapper from "~/app/_components/_coaching/single-screen-wrapper";
 import { api } from "~/trpc/server";
 
@@ -13,6 +14,7 @@ const CoachingDataClients = async () => {
     <>
       <NewEditClientDialog />
       <DeleteClientDialog />
+      <RegisterWeightFatPercentageDialog />
 
       <SingleScreenWrapper>
         <Toaster richColors duration={3000} />

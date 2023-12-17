@@ -9,8 +9,7 @@ import { toast } from "sonner";
 
 export const SystemFoodColumns: ColumnDef<GetSystemFood>[] = [
   {
-    accessorKey: "liked",
-    header: "",
+    id: "liked",
     enableHiding: false,
 
     cell: ({ row }) => {

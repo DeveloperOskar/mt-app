@@ -26,8 +26,7 @@ import {
 
 export const coachingFoodColumns: ColumnDef<GetCoachingFoods>[] = [
   {
-    accessorKey: "liked",
-    header: "",
+    id: "liked",
     enableHiding: false,
 
     cell: ({ row }) => {

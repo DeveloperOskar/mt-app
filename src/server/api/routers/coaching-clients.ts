@@ -34,6 +34,25 @@ export const coachingClientsRouter = createTRPCRouter({
       `);
     }),
 
+  addFatPercentage: protectedProcedure
+    .input(z.object({ clientId: z.number(), fatPercentage: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      if (!input.clientId) throw new Error("No id provided");
+
+      return await ctx.db.execute(sql`
+        UPDATE ${coachingClients}
+        SET ${coachingClients.fatPercentages} = JSON_ARRAY_APPEND(
+          ${coachingClients.fatPercentages},
+          '$',
+          JSON_OBJECT(
+            'date', ${new Date().toISOString()},
+            'value', ${showDecimalIfNotZero(input.fatPercentage, 2)}
+          )
+        )
+        WHERE ${coachingClients.id} = ${input.clientId}
+      `);
+    }),
+
   create: protectedProcedure
     .input(z.object({ client: createClientSchema, createdDate: z.date() }))
     .mutation(async ({ ctx, input }) => {
@@ -108,7 +127,8 @@ export const coachingClientsRouter = createTRPCRouter({
           input.updatedClient.fatPercentage,
           2,
         )}
-      )
+      ),
+      ${coachingClients.goal} = ${input.updatedClient.goal}
           WHERE ${coachingClients.id} = ${input.updatedClient.id}
       `);
     }),

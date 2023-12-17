@@ -10,6 +10,13 @@ export interface CoachingClientsState {
     show: boolean;
     client: GetCoachingClient | null | undefined;
   };
+
+  addWeightOrFatPercentageDialog: {
+    clientId: number | null;
+    show: boolean;
+    action: "weight" | "fatPercentage";
+    clientName: string;
+  };
 }
 
 export const toggleAddEditClientDialog = (
@@ -38,6 +45,23 @@ export const toggleDeleteClientDialog = (
   }));
 };
 
+export const toggleAddWeightOrFatPercentageDialog = (
+  show: boolean,
+  clientId: number | null,
+  action: "weight" | "fatPercentage",
+  clientName: string,
+) => {
+  coachingClientsState$.set((state) => ({
+    ...state,
+    addWeightOrFatPercentageDialog: {
+      show,
+      clientId,
+      action,
+      clientName,
+    },
+  }));
+};
+
 export const coachingClientsState$ = observable<CoachingClientsState>({
   addEditClientDialog: {
     show: false,
@@ -46,5 +70,11 @@ export const coachingClientsState$ = observable<CoachingClientsState>({
   deleteClientDialog: {
     show: false,
     client: null,
+  },
+  addWeightOrFatPercentageDialog: {
+    clientId: null,
+    show: false,
+    action: "weight",
+    clientName: "",
   },
 });

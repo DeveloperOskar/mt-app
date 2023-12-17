@@ -14,6 +14,7 @@ import {
 import { Button } from "~/app/_components/ui/button";
 import { SystemFoodColumns } from "./system-food-columns";
 import { GetCoachingFoods } from "~/types/_coaching/data/foods/coaching-foods";
+import { cn } from "~/app/_lib/utils";
 
 export const CoachingFoodsTable = ({
   table,
@@ -29,7 +30,14 @@ export const CoachingFoodsTable = ({
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id}>
+                    <TableHead
+                      className={cn(
+                        "",
+                        header.column.columnDef.id === "liked" && "w-[90px] ",
+                        header.column.columnDef.id === "actions" && "w-[90px] ",
+                      )}
+                      key={header.id}
+                    >
                       {header.isPlaceholder
                         ? null
                         : flexRender(

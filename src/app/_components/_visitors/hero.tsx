@@ -8,7 +8,7 @@ import { Check } from "lucide-react";
 
 const Hero = () => {
   return (
-    <section className="container mx-auto grid  min-h-[calc(100vh-70px)]  grid-cols-[1fr_700px] items-center gap-14">
+    <section className="container mx-auto grid  min-h-[calc(100vh-70px)]  grid-cols-[1fr_720px] items-center gap-14">
       <div>
         <div className="flex  flex-col gap-2">
           <Badge className="w-fit text-lg">MyTeam</Badge>
@@ -18,9 +18,8 @@ const Hero = () => {
           <p className="text-xl text-card-foreground">
             Lorem ipsum dolor sit amet, consectetur adipisicing elit.
             Asperiores, nisi id minima, ab minus repellendus ducimus magnam
-            laudantium iure rerum. Lorem ipsum dolor sit amet, consectetur
-            adipisicing elit. Asperiores, nisi id minima, ab minus repellendus
-            ducimus magnam laudantium iure rerum.
+            laudantium iure rerum. Lorem ipsum dolor sit amet. laudantium iure
+            rerum. Lorem ipsum dolor sit amet.
           </p>
         </div>
 

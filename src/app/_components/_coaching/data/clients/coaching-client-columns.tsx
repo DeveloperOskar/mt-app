@@ -1,5 +1,6 @@
 import { ColumnDef } from "@tanstack/react-table";
 import {
+  DraftingCompass,
   Edit,
   MoreHorizontal,
   Scale,
@@ -26,9 +27,28 @@ import { GetCoachingClient } from "~/types/_coaching/data/clients/coaching-clien
 import { Avatar, AvatarFallback } from "~/app/_components/ui/avatar";
 import {
   toggleAddEditClientDialog,
+  toggleAddWeightOrFatPercentageDialog,
   toggleDeleteClientDialog,
 } from "~/app/_state/coaching/data/clients/coachingClientsState";
 import { Badge } from "~/app/_components/ui/badge";
+
+const calculateProgress = <T extends { value: number }>(
+  values: T[],
+  suffix: string = "kg",
+) => {
+  if (values.length > 1) {
+    const lastWeight = values[values.length - 1]?.value ?? 0;
+    const secondLastWeight = values[values.length - 2]?.value ?? 0;
+    const progress = lastWeight - secondLastWeight;
+
+    return (
+      <span className="text-xs text-gray-500">
+        ({progress > 0 ? "+" : ""}
+        {progress.toFixed(1)} {suffix} )
+      </span>
+    );
+  }
+};
 
 export const coachingClientsColumns: ColumnDef<GetCoachingClient>[] = [
   {
@@ -127,13 +147,15 @@ export const coachingClientsColumns: ColumnDef<GetCoachingClient>[] = [
     accessorKey: "weightIns",
     header: "Vikt",
     id: "weight",
-    cell: ({ row }) => (
-      <div>
-        {row.original.weightIns[row.original.weightIns.length - 1]?.value ??
-          "-"}{" "}
-        kg
-      </div>
-    ),
+    cell: ({ row }) => {
+      return (
+        <div>
+          {row.original.weightIns[row.original.weightIns.length - 1]?.value ??
+            "-"}{" "}
+          kg {calculateProgress(row.original.weightIns)}
+        </div>
+      );
+    },
   },
   {
     accessorKey: "fatPercentages",
@@ -145,7 +167,7 @@ export const coachingClientsColumns: ColumnDef<GetCoachingClient>[] = [
           row.original.fatPercentages[row.original.fatPercentages.length - 1]
             ?.value ?? 0,
         )}{" "}
-        %
+        % {calculateProgress(row.original.fatPercentages, "%")}
       </div>
     ),
   },
@@ -217,7 +239,38 @@ export const coachingClientsColumns: ColumnDef<GetCoachingClient>[] = [
             </DropdownMenuTrigger>
 
             <DropdownMenuContent className="mr-4 min-w-[150px]" align="end">
-              <DropdownMenuLabel>Hantera</DropdownMenuLabel>
+              <DropdownMenuLabel>
+                <span className=" capitalize">{row.original.name}</span>
+              </DropdownMenuLabel>
+
+              <DropdownMenuSeparator />
+
+              <DropdownMenuItem
+                onClick={(e) =>
+                  toggleAddWeightOrFatPercentageDialog(
+                    true,
+                    row.original.id,
+                    "weight",
+                    row.original.name,
+                  )
+                }
+              >
+                <Scale className="mr-2 h-4 w-4" /> Registrera vikt
+              </DropdownMenuItem>
+
+              <DropdownMenuItem
+                onClick={(e) =>
+                  toggleAddWeightOrFatPercentageDialog(
+                    true,
+                    row.original.id,
+                    "fatPercentage",
+                    row.original.name,
+                  )
+                }
+              >
+                <DraftingCompass className="mr-2 h-4 w-4" /> Registrera
+                fettprocent
+              </DropdownMenuItem>
 
               <DropdownMenuSeparator />
 

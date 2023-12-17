@@ -115,7 +115,7 @@ const CoachingClientTable: React.FC<{
         </div>
 
         <div className="styled-scrollbar grow overflow-auto rounded-md border bg-white">
-          <Table className="bg-white">
+          <Table className="h-full min-w-[1400px] bg-white">
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup, index) => (
                 <TableRow key={headerGroup.id + index}>
@@ -124,12 +124,10 @@ const CoachingClientTable: React.FC<{
                       <TableHead
                         className={cn(
                           "",
-                          header.column.columnDef.id === "avatar" && "w-[90px]",
-                          header.column.columnDef.id === "name" && "w-[180px] ",
-                          header.column.columnDef.id === "goal" &&
-                            "w-[170px]  ",
-                          header.column.columnDef.id === "email" &&
-                            "w-[280px] ",
+                          header.column.columnDef.id === "avatar" &&
+                            "min-w-[90px]",
+                          header.column.columnDef.id === "actions" &&
+                            "min-w-[90px] ",
                         )}
                         key={header.id + index}
                       >
