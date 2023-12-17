@@ -12,7 +12,7 @@ import { Check } from "lucide-react";
 
 const SellingPoints = () => {
   return (
-    <div className="h-[calc(100vh-70px)] bg-slate-50 py-24 ">
+    <div className="h-[calc(100vh-70px)] bg-slate-50 py-16 ">
       <section className="container grid h-full grid-cols-[1fr_700px]">
         <div className="flex  h-full flex-col justify-between ">
           <div className="flex  flex-col gap-2">
@@ -40,18 +40,24 @@ const SellingPoints = () => {
             </CardHeader>
 
             <CardContent>
-              <ul>
+              <ul className="flex flex-col gap-1.5">
                 <li className="flex items-center gap-2">
-                  <Check className="text-green-500" />{" "}
-                  <span className="font-semibold">Något feature 1</span>
+                  <Check className="h-5 w-5  text-green-500" />{" "}
+                  <span className=" ">Följ dina klienters progress.</span>
                 </li>
+
                 <li className="flex items-center gap-2">
-                  <Check className="text-green-500" />{" "}
-                  <span className="font-semibold">Något feature 2</span>
+                  <Check className="h-5 w-5 text-green-500" />{" "}
+                  <span className="">
+                    Skapa kostscheman efter dina klienters behov.
+                  </span>
                 </li>
+
                 <li className="flex items-center gap-2">
-                  <Check className="text-green-500" />{" "}
-                  <span className="font-semibold">Något feature 3</span>
+                  <Check className="h-5 w-5 text-green-500" />{" "}
+                  <span className="">
+                    Skapa träningscheman efter dina klienters behov.
+                  </span>
                 </li>
               </ul>
             </CardContent>
@@ -68,18 +74,23 @@ const SellingPoints = () => {
             </CardHeader>
 
             <CardContent>
-              <ul>
+              <ul className="flex flex-col gap-1.5">
                 <li className="flex items-center gap-2">
-                  <Check className="text-green-500" />{" "}
-                  <span className="font-semibold">Något feature 1</span>
+                  <Check className="h-5 w-5 text-green-500" />{" "}
+                  <span className="">
+                    Skapa noggranna kostscheman med ett enkelt gränssnitt.
+                  </span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <Check className="text-green-500" />{" "}
-                  <span className="font-semibold">Något feature 2</span>
+                  <Check className="h-5 w-5 text-green-500" />{" "}
+                  <span className="">
+                    Exportera oändligt med kostschmat i PDF format
+                  </span>
                 </li>
+
                 <li className="flex items-center gap-2">
-                  <Check className="text-green-500" />{" "}
-                  <span className="font-semibold">Något feature 3</span>
+                  <Check className="h-5 w-5 text-green-500" />{" "}
+                  <span className="">Skicka kostschemat direkt med epost.</span>
                 </li>
               </ul>
             </CardContent>
@@ -96,18 +107,25 @@ const SellingPoints = () => {
             </CardHeader>
 
             <CardContent>
-              <ul>
+              <ul className="flex flex-col gap-1.5">
                 <li className="flex items-center gap-2">
-                  <Check className="text-green-500" />{" "}
-                  <span className="font-semibold">Något feature 1</span>
+                  <Check className="h-5 w-5 text-green-500" />{" "}
+                  <span className="">
+                    Skapa noggranna träningscheman med ett enkelt gränssnitt.
+                  </span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <Check className="text-green-500" />{" "}
-                  <span className="font-semibold">Något feature 2</span>
+                  <Check className="h-5 w-5 text-green-500" />{" "}
+                  <span className="">
+                    Exportera oändligt med träningscheman i PDF format
+                  </span>
                 </li>
+
                 <li className="flex items-center gap-2">
-                  <Check className="text-green-500" />{" "}
-                  <span className="font-semibold">Något feature 3</span>
+                  <Check className="h-5 w-5 text-green-500" />{" "}
+                  <span className="">
+                    Skicka träningscheman direkt med epost.
+                  </span>
                 </li>
               </ul>
             </CardContent>

@@ -5,6 +5,12 @@ const CoachingSubNav = () => {
   return (
     <nav className="flex items-center  gap-6  border-b bg-white px-3 py-3">
       <CoachingSubNavLink
+        part="dashboard"
+        href={"/coaching/dashboard"}
+        text={"Översikt"}
+      />
+
+      <CoachingSubNavLink
         part="data"
         href={"/coaching/data/foods"}
         text={"Livsmedel"}

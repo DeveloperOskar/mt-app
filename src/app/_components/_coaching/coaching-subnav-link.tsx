@@ -26,13 +26,6 @@ const CoachingSubNavLink = ({
       href={href}
     >
       <span>{text}</span>
-
-      {/* <div
-        className={cn(
-          "absolute left-0 top-[35px] h-[2px] w-full transition-all duration-100 group-hover:bg-black",
-          href === pathname ? "bg-black" : "bg-transparent",
-        )}
-      ></div> */}
     </Link>
   );
 };

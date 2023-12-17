@@ -124,10 +124,9 @@ const CoachingClientTable: React.FC<{
                       <TableHead
                         className={cn(
                           "",
-                          header.column.columnDef.id === "avatar" &&
-                            "min-w-[90px]",
+                          header.column.columnDef.id === "avatar" && "w-[90px]",
                           header.column.columnDef.id === "actions" &&
-                            "min-w-[90px] ",
+                            "w-[90px] ",
                         )}
                         key={header.id + index}
                       >
