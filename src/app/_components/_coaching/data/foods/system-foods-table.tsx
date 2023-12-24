@@ -15,12 +15,13 @@ import { Button } from "~/app/_components/ui/button";
 import { GetSystemFood } from "~/types/_coaching/data/foods/system-foods";
 import { SystemFoodColumns } from "./system-food-columns";
 import { cn } from "~/app/_lib/utils";
-
+import { useSearchParams } from "next/navigation";
 export const SystemFoodsTable = ({
   table,
 }: {
   table: TableType<GetSystemFood>;
 }) => {
+  const params = useSearchParams();
   return (
     <>
       <div className="styled-scrollbar grow overflow-auto rounded-md border bg-white">
@@ -92,7 +93,9 @@ export const SystemFoodsTable = ({
         <Button
           variant="outline"
           size="sm"
-          onClick={() => table.nextPage()}
+          onClick={() => {
+            table.nextPage();
+          }}
           disabled={!table.getCanNextPage()}
         >
           Nästa sida

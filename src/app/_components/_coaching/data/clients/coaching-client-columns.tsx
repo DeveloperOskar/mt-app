@@ -252,6 +252,7 @@ export const coachingClientsColumns: ColumnDef<GetCoachingClient>[] = [
                     row.original.id,
                     "weight",
                     row.original.name,
+                    row.original.weightIns,
                   )
                 }
               >
@@ -265,6 +266,7 @@ export const coachingClientsColumns: ColumnDef<GetCoachingClient>[] = [
                     row.original.id,
                     "fatPercentage",
                     row.original.name,
+                    row.original.fatPercentages,
                   )
                 }
               >

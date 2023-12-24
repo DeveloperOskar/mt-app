@@ -16,6 +16,7 @@ export interface CoachingClientsState {
     show: boolean;
     action: "weight" | "fatPercentage";
     clientName: string;
+    history: { value: number; date: string }[];
   };
 }
 
@@ -50,6 +51,7 @@ export const toggleAddWeightOrFatPercentageDialog = (
   clientId: number | null,
   action: "weight" | "fatPercentage",
   clientName: string,
+  history: { value: number; date: string }[],
 ) => {
   coachingClientsState$.set((state) => ({
     ...state,
@@ -58,6 +60,7 @@ export const toggleAddWeightOrFatPercentageDialog = (
       clientId,
       action,
       clientName,
+      history,
     },
   }));
 };
@@ -76,5 +79,6 @@ export const coachingClientsState$ = observable<CoachingClientsState>({
     show: false,
     action: "weight",
     clientName: "",
+    history: [],
   },
 });

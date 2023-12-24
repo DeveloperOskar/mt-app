@@ -20,17 +20,16 @@ export function AvatarColorPicker({
   background: [string, Dispatch<SetStateAction<string>>];
   textColor: [string, Dispatch<SetStateAction<string>>];
 }) {
-  const solids = [
-    "#7C3AED",
-    "#F97316",
-    "#16A34A",
-    "#2563EB",
-    "#E11D48",
-    "#18181B",
-    AVATAR_BASE_BACKGROUND_COLOR,
-    "#FACC15",
-    AVATAR_BASE_TEXT_COLOR,
-  ];
+  const colorCombinations = [
+    { text: "#FFFFFF", background: "#2E3A87" },
+    { text: "#FFFFFF", background: "#18181B" },
+    { text: "#FFFFFF", background: "#E4335A" },
+    { text: "#FFFFFF", background: "#3A72EC" },
+    { text: "#FFFFFF", background: "#F97316" },
+    { text: "#FFFFFF", background: "#7C3AED" },
+    { text: "#000000", background: "#F1F5F9" },
+    { text: "#000000", background: "#FACC15" },
+  ] as const;
 
   return (
     <Popover>
@@ -51,50 +50,24 @@ export function AvatarColorPicker({
             </AvatarFallback>
           </Avatar>
           <Pipette className="absolute bottom-0 right-[-10px] h-4 w-4" />
-
-          {!name && (
-            <span className="absolute bottom-[-25px] text-xs ">
-              Ange ett namn för att se initialerna
-            </span>
-          )}
         </Button>
       </PopoverTrigger>
 
       {/* Color content */}
       <PopoverContent className="w-64">
-        <Tabs defaultValue={"text-color"} className="w-full">
-          <TabsList className="mb-4 w-full">
-            <TabsTrigger className="flex-1" value="text-color">
-              Text
-            </TabsTrigger>
-
-            <TabsTrigger className="flex-1" value="background">
-              Bakground
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="text-color" className="mt-0 flex flex-wrap gap-1">
-            {solids.map((s) => (
-              <div
-                onClick={() => setColor(s)}
-                key={s}
-                style={{ background: s }}
-                className="h-6 w-6 cursor-pointer rounded-md active:scale-105"
-              />
-            ))}
-          </TabsContent>
-
-          <TabsContent value="background" className="mt-0 flex flex-wrap gap-1">
-            {solids.map((s) => (
-              <div
-                onClick={() => setBg(s)}
-                key={s}
-                style={{ background: s }}
-                className="h-6 w-6 cursor-pointer rounded-md active:scale-105"
-              />
-            ))}
-          </TabsContent>
-        </Tabs>
+        <div className="mt-0 flex flex-wrap gap-1">
+          {colorCombinations.map((color, i) => (
+            <div
+              onClick={() => {
+                setColor(color.text);
+                setBg(color.background);
+              }}
+              key={i}
+              style={{ background: color.background }}
+              className="h-6 w-6 cursor-pointer rounded-md active:scale-105"
+            />
+          ))}
+        </div>
       </PopoverContent>
     </Popover>
   );

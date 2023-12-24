@@ -180,6 +180,8 @@ const AddClientDialog = ({ form }: { form: Form }) => {
     await utils.coachingClients.invalidate();
     toast.success(`${values.name} har sparats`);
     router.refresh();
+    textColor[1](AVATAR_BASE_TEXT_COLOR);
+    background[1](AVATAR_BASE_BACKGROUND_COLOR);
     form.reset();
   };
 
@@ -201,7 +203,7 @@ const AddClientDialog = ({ form }: { form: Form }) => {
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          <div className="mt-5 grid grid-cols-2 gap-x-8 gap-y-4">
+          <div className=" grid grid-cols-2 gap-x-8 gap-y-4">
             <FormField
               control={form.control}
               name="name"
